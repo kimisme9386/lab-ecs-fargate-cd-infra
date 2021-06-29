@@ -12,6 +12,6 @@ RUN yum update -y && \
 RUN pipenv --python 3 && \
   pipenv sync
 
-EXPOSE 9999
+EXPOSE 80
 
 CMD ["pipenv", "run", "python3", "app.py"]
