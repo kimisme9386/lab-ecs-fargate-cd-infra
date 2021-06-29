@@ -15,5 +15,10 @@ def deploy():
     return 'Delay api for test'
 
 
+@app.route('/v1/hello')
+def health_check():
+    return 'ok'
+
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=80)
