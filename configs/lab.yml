@@ -1,0 +1,28 @@
+Network:
+  vpc:
+    maxAzs: 2
+    natGateways: 0
+    ipv6enabled: true
+  alb:
+    targetHealthCheck: 
+      enabled: true
+      interval: 30 # unit: seconds
+      path: "/hello"
+      timeout: 5 # unit: seconds
+      healthyThresholdCount: 5
+      unhealthyThresholdCount: 2
+
+Ecs:
+  ecrRepositoryName: wondercise-rest-api
+  memoryLimitMiB: 512
+  cpu: 256
+  container:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+      COMPlus_ThreadPool_ForceMinWorkerThreads: '600'
+    logGroupName: /ecs/staging-wondercise-api
+  service:
+    desiredCount: 0
+    minHealthyPercent: 100
+    maxHealthyPercent: 200
+    circuitBreakerRollback: true

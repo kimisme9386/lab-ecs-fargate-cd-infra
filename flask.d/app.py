@@ -15,7 +15,7 @@ def deploy():
     return 'Delay api for test'
 
 
-@app.route('/v1/hello')
+@app.route('/hello')
 def health_check():
     return 'ok'
 
