@@ -2,7 +2,6 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
-import * as iam from '@aws-cdk/aws-iam';
 import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
 import { NetworkConfig, StageConfig } from './main';
@@ -35,20 +34,6 @@ export class EcsFargate extends cdk.Stack {
         cpu: props.stageConfig.Ecs.cpu,
       }
     );
-
-    if (props.stageConfig.Ecs.taskRole.customManagedPolicies.length > 0) {
-      props.stageConfig.Ecs.taskRole.customManagedPolicies.forEach(
-        (customManagedPolicy: string, idx: number) => {
-          fargateTaskDefinition.taskRole.addManagedPolicy(
-            iam.ManagedPolicy.fromManagedPolicyName(
-              this,
-              `AttachManagedPolicy${idx + 1}`,
-              customManagedPolicy
-            )
-          );
-        }
-      );
-    }
 
     fargateTaskDefinition.addContainer('restApiContainer', {
       image: ecs.ContainerImage.fromEcrRepository(ecrRepository),

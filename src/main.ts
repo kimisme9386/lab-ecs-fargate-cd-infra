@@ -5,6 +5,7 @@ import { EcsFargate } from './ecs-fargate';
 import { RestAPINetwork } from './restapi-network';
 
 enum Stage {
+  LAB = 'lab',
   STAGING = 'staging',
   PROD = 'prod',
 }
