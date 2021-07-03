@@ -1,11 +1,37 @@
+import { SynthUtils } from '@aws-cdk/assert';
 import '@aws-cdk/assert/jest';
 import { App } from '@aws-cdk/core';
-import { MyStack } from '../src/main';
+import * as fs from 'fs';
+import * as yaml from 'js-yaml';
+import { EcsFargate } from '../src/ecs-fargate';
+import { StageConfig } from '../src/main';
+import { RestAPINetwork } from '../src/restapi-network';
 
 test('Snapshot', () => {
-  const app = new App();
-  const stack = new MyStack(app, 'test');
+  process.env.STAGE = 'lab';
 
-  expect(stack).not.toHaveResource('AWS::S3::Bucket');
-  expect(app.synth().getStackArtifact(stack.artifactId).template).toMatchSnapshot();
+  const stageConfig: StageConfig = yaml.safeLoad(
+    fs.readFileSync(`${__dirname}/../configs/${process.env.STAGE}.yml`, 'utf8')
+  ) as StageConfig;
+
+  const env = {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  };
+
+  const app = new App();
+  const stackNetwork = new RestAPINetwork(app, 'testStack1', {
+    env,
+    stageConfig,
+  });
+
+  const stackFargate = new EcsFargate(app, 'testStack2', {
+    vpc: stackNetwork.vpc,
+    alb: stackNetwork.alb,
+    env,
+    stageConfig,
+  });
+
+  expect(SynthUtils.toCloudFormation(stackNetwork)).toMatchSnapshot();
+  expect(SynthUtils.toCloudFormation(stackFargate)).toMatchSnapshot();
 });
