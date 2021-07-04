@@ -23,7 +23,7 @@ export class EcsFargate extends cdk.Stack {
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc:
         props?.vpc ??
-        ec2.Vpc.fromLookup(this, 'defaultVpc', { isDefault: true }),
+        ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true }),
     });
 
     const fargateTaskDefinition = new ecs.FargateTaskDefinition(
@@ -35,7 +35,7 @@ export class EcsFargate extends cdk.Stack {
       }
     );
 
-    fargateTaskDefinition.addContainer('restApiContainer', {
+    fargateTaskDefinition.addContainer('RestApiContainer', {
       image: ecs.ContainerImage.fromEcrRepository(ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],

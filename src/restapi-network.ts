@@ -13,7 +13,7 @@ export class RestAPINetwork extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props: RestAPINetworkProps) {
     super(scope, id, props);
-    this.vpc = new ec2.Vpc(this, 'vpc', {
+    this.vpc = new ec2.Vpc(this, 'Vpc', {
       cidr: '10.0.0.0/16',
       maxAzs: props.stageConfig.Network.vpc.maxAzs,
       natGateways: props.stageConfig.Network.vpc.natGateways,
@@ -28,7 +28,7 @@ export class RestAPINetwork extends cdk.Stack {
 
     if (props.stageConfig.Network.vpc.ipv6enabled) this.enableIpv6(this.vpc);
 
-    this.alb = new elbv2.ApplicationLoadBalancer(this, 'alb', {
+    this.alb = new elbv2.ApplicationLoadBalancer(this, 'Alb', {
       vpc: this.vpc,
       internetFacing: true,
       ipAddressType: elbv2.IpAddressType.DUAL_STACK,

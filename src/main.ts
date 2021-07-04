@@ -74,12 +74,12 @@ const devEnv = {
 
 const app = new App();
 
-const restAPINetwork = new RestAPINetwork(app, 'api-network', {
+const restAPINetwork = new RestAPINetwork(app, 'ApiNetwork', {
   stageConfig,
   env: devEnv,
 });
 
-const ecsFargate = new EcsFargate(app, 'api-app', {
+const ecsFargate = new EcsFargate(app, 'ApiApp', {
   stageConfig,
   vpc: restAPINetwork.vpc,
   alb: restAPINetwork.alb,
