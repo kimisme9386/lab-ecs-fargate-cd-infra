@@ -29,7 +29,7 @@ jobs:
           aws-region: ${{ env.CDK_DEFAULT_REGION }}
           role-to-assume: ${{ env.ASSUME_ROLE_NAME }}
           role-duration-seconds: 1200
-          role-session-name: repo-iam-management-github-actions
+          role-session-name: github-actions-assume-role
       - name: install aws-cdk
         run: sudo npm i -g aws-cdk@1.111.0
       - name: install npm package

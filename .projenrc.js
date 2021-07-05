@@ -80,7 +80,7 @@ deployWorkflow.addJobs({
           'aws-region': '${{ env.CDK_DEFAULT_REGION }}',
           'role-to-assume': '${{ env.ASSUME_ROLE_NAME }}',
           'role-duration-seconds': 1200,
-          'role-session-name': 'repo-iam-management-github-actions',
+          'role-session-name': 'github-actions-assume-role',
         },
       },
       {
