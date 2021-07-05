@@ -16,6 +16,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-codepipeline',
     '@aws-cdk/aws-codebuild',
     '@aws-cdk/aws-codepipeline-actions',
+    '@aws-cdk/aws-codedeploy',
   ],
   devDeps: ['@types/js-yaml@^3.12.5'],
   deps: ['js-yaml@^3.14.1', 'cdk-pipeline-status@^0.0.48'],

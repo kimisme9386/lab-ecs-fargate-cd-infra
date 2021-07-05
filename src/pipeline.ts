@@ -24,12 +24,17 @@ export class Pipeline extends cdk.Stack {
 
     this.addSourceStage(pipeline, sourceArtifact);
 
-    const codebuild = this.createCodeBuildWithinCodePipeline(
+    const codebuildProject = this.createCodeBuildWithinCodePipeline(
       props.ecrRepository
     );
     const afterBuildArtifact = new codePipeline.Artifact();
 
-    this.addBuildStage(pipeline, codebuild, sourceArtifact, afterBuildArtifact);
+    this.addBuildStage(
+      pipeline,
+      codebuildProject,
+      sourceArtifact,
+      afterBuildArtifact
+    );
 
     this.createCodeDeploy();
 
@@ -120,7 +125,7 @@ export class Pipeline extends cdk.Stack {
 
   addBuildStage(
     pipeline: codePipeline.Pipeline,
-    codebuild: codebuild.PipelineProject,
+    codebuildProject: codebuild.PipelineProject,
     sourceArtifact: codePipeline.Artifact,
     afterBuildArtifact: codePipeline.Artifact
   ) {
@@ -130,7 +135,7 @@ export class Pipeline extends cdk.Stack {
         new codepipeline_actions.CodeBuildAction({
           actionName: 'AWS_CodeBuild',
           input: sourceArtifact,
-          project: codebuild,
+          project: codebuildProject,
           type: codepipeline_actions.CodeBuildActionType.BUILD,
           outputs: [afterBuildArtifact],
         }),
