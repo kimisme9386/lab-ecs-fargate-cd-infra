@@ -396,11 +396,6 @@ Object {
       },
     },
   },
-  "Parameters": Object {
-    "TaskDefRestApiContainerImageTagParamEDA9A8F6": Object {
-      "Type": "String",
-    },
-  },
   "Resources": Object {
     "AlbListenerDFCDF14C": Object {
       "Properties": Object {
@@ -481,7 +476,7 @@ Object {
     "EcsLogGroupD0138CE7": Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
-        "LogGroupName": "/ecs/staging-wondercise-api",
+        "LogGroupName": "/ecs/lab-rest-api",
         "RetentionInDays": 731,
       },
       "Type": "AWS::Logs::LogGroup",
@@ -490,7 +485,7 @@ Object {
     "Repository22E53BBD": Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
-        "RepositoryName": "wondercise-rest-api",
+        "RepositoryName": "lab-rest-api",
       },
       "Type": "AWS::ECR::Repository",
       "UpdateReplacePolicy": "Retain",
@@ -515,7 +510,7 @@ Object {
         "DeploymentController": Object {
           "Type": "ECS",
         },
-        "DesiredCount": 2,
+        "DesiredCount": 0,
         "EnableECSManagedTags": false,
         "HealthCheckGracePeriodSeconds": 0,
         "LaunchType": "FARGATE",
@@ -667,10 +662,7 @@ Object {
                   Object {
                     "Ref": "Repository22E53BBD",
                   },
-                  ":",
-                  Object {
-                    "Ref": "TaskDefRestApiContainerImageTagParamEDA9A8F6",
-                  },
+                  ":latest",
                 ],
               ],
             },
@@ -859,11 +851,6 @@ Object {
             "/view)",
           ],
         ],
-      },
-    },
-    "EcsCodeDeployApplicationName": Object {
-      "Value": Object {
-        "Ref": "CodeDeployApplicationE587C27C",
       },
     },
   },
@@ -1170,54 +1157,6 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
-    "CodeDeployApplicationE587C27C": Object {
-      "Properties": Object {
-        "ComputePlatform": "ECS",
-      },
-      "Type": "AWS::CodeDeploy::Application",
-    },
-    "CodeDeployECSRole1C2859D5": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "codedeploy.",
-                      Object {
-                        "Ref": "AWS::Region",
-                      },
-                      ".amazonaws.com",
-                    ],
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": Array [
-          Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "arn:",
-                Object {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/AWSCodeDeployRoleForECS",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
     "CodePipelineStatusBadgeBucketEC4C6A0A": Object {
       "DeletionPolicy": "Retain",
       "Type": "AWS::S3::Bucket",
@@ -1499,26 +1438,6 @@ Object {
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "EcsDeploymentGroup": Object {
-      "DependsOn": Array [
-        "CodeDeployApplicationE587C27C",
-      ],
-      "Properties": Object {
-        "ApplicationName": Object {
-          "Ref": "CodeDeployApplicationE587C27C",
-        },
-        "AutoRollbackConfiguration": Object {
-          "Enabled": true,
-        },
-        "ServiceRoleArn": Object {
-          "Fn::GetAtt": Array [
-            "CodeDeployECSRole1C2859D5",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::CodeDeploy::DeploymentGroup",
     },
     "PipelineArtifactsBucket22248F97": Object {
       "DeletionPolicy": "Retain",

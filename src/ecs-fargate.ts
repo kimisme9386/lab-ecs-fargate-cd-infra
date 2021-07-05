@@ -39,7 +39,7 @@ export class EcsFargate extends cdk.Stack {
     );
 
     fargateTaskDefinition.addContainer('RestApiContainer', {
-      image: new ecs.TagParameterContainerImage(this.ecrRepository),
+      image: ecs.ContainerImage.fromEcrRepository(this.ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
       logging: ecs.LogDriver.awsLogs({

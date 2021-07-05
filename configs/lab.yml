@@ -15,16 +15,16 @@ Network:
       unhealthyThresholdCount: 2
 
 Ecs:
-  ecrRepositoryName: wondercise-rest-api
+  ecrRepositoryName: lab-rest-api
   memoryLimitMiB: 512
   cpu: 256
   container:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
       COMPlus_ThreadPool_ForceMinWorkerThreads: '600'
-    logGroupName: /ecs/staging-wondercise-api
+    logGroupName: /ecs/lab-rest-api
   service:
-    desiredCount: 2
+    desiredCount: 0
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: true

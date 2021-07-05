@@ -1,5 +1,4 @@
 import * as codebuild from '@aws-cdk/aws-codebuild';
-import * as codedeploy from '@aws-cdk/aws-codedeploy';
 import * as codePipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as ecr from '@aws-cdk/aws-ecr';
@@ -36,8 +35,6 @@ export class Pipeline extends cdk.Stack {
       afterBuildArtifact
     );
 
-    this.createCodeDeploy();
-
     this.addDeploymentStage(pipeline, props.fargateService, afterBuildArtifact);
 
     this.createPipelineStatus(pipeline);
@@ -58,33 +55,6 @@ export class Pipeline extends cdk.Stack {
         }),
       ],
     });
-  }
-
-  createCodeDeploy() {
-    const application = new codedeploy.EcsApplication(
-      this,
-      'CodeDeployApplication'
-    );
-
-    new cdk.CfnOutput(this, 'EcsCodeDeployApplicationName', {
-      value: application.applicationName,
-    });
-
-    const cfnDeploymentGroup = new codedeploy.CfnDeploymentGroup(
-      this,
-      'EcsDeploymentGroup',
-      {
-        applicationName: application.applicationName,
-        serviceRoleArn: this.createECSCodeDeployRole().roleArn,
-        autoRollbackConfiguration: {
-          enabled: true,
-        },
-      }
-    );
-
-    cfnDeploymentGroup.addDependsOn(
-      application.node.defaultChild as codedeploy.CfnApplication
-    );
   }
 
   createECSCodeDeployRole(): iam.Role {
