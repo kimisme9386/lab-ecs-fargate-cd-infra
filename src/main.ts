@@ -1,7 +1,8 @@
-import { App } from '@aws-cdk/core';
+import { App, Aws, Construct, Tags } from '@aws-cdk/core';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import { EcsFargate } from './ecs-fargate';
+import { Pipeline } from './pipeline';
 import { RestAPINetwork } from './restapi-network';
 
 enum Stage {
@@ -58,6 +59,16 @@ interface EcsConfig {
   };
 }
 
+function readConfig(stageName: string): any {
+  return yaml.safeLoad(
+    fs.readFileSync(`${__dirname}/../configs/${stageName}.yml`, 'utf8')
+  );
+}
+
+function tagResource(scope: Construct): void {
+  Tags.of(scope).add('CDK-CfnStackName', Aws.STACK_NAME);
+}
+
 const stage = process.env.STAGE || null;
 
 if (stage === null || !Object.values(Stage).includes(stage as Stage)) {
@@ -79,6 +90,8 @@ const restAPINetwork = new RestAPINetwork(app, 'ApiNetwork', {
   env: devEnv,
 });
 
+tagResource(restAPINetwork);
+
 const ecsFargate = new EcsFargate(app, 'ApiApp', {
   stageConfig,
   vpc: restAPINetwork.vpc,
@@ -86,12 +99,16 @@ const ecsFargate = new EcsFargate(app, 'ApiApp', {
   env: devEnv,
 });
 
+tagResource(ecsFargate);
+
+const pipeline = new Pipeline(app, 'ApiPipeline', {
+  fargateService: ecsFargate.service,
+  ecrRepository: ecsFargate.ecrRepository,
+  env: devEnv,
+});
+
+tagResource(pipeline);
+
 ecsFargate.addDependency(restAPINetwork);
 
 app.synth();
-
-function readConfig(stageName: string): any {
-  return yaml.safeLoad(
-    fs.readFileSync(`${__dirname}/../configs/${stageName}.yml`, 'utf8')
-  );
-}

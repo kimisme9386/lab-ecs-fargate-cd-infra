@@ -5,6 +5,7 @@ const project = new AwsCdkTypeScriptApp({
   defaultReleaseBranch: 'main',
   name: 'lab-ecs-fargate-cd-infra',
   cdkDependencies: [
+    '@aws-cdk/aws-iam',
     '@aws-cdk/aws-ecr',
     '@aws-cdk/aws-ec2',
     '@aws-cdk/aws-ecs',
@@ -12,10 +13,20 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-elasticloadbalancingv2',
     '@aws-cdk/aws-logs',
     '@aws-cdk/aws-iam',
+    '@aws-cdk/aws-codepipeline',
+    '@aws-cdk/aws-codebuild',
+    '@aws-cdk/aws-codepipeline-actions',
   ],
   devDeps: ['@types/js-yaml@^3.12.5'],
-  deps: ['js-yaml@^3.14.1'],
+  deps: ['js-yaml@^3.14.1', 'cdk-pipeline-status@^0.0.48'],
   releaseWorkflow: false,
+  context: {
+    'availability-zones:account=482631629698:region=ap-northeast-1': [
+      'ap-northeast-1a',
+      'ap-northeast-1c',
+      'ap-northeast-1d',
+    ],
+  },
 });
 
 project.eslint.addRules({

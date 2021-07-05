@@ -13,10 +13,13 @@ interface EcsFargateProps extends cdk.StackProps {
 }
 
 export class EcsFargate extends cdk.Stack {
+  readonly service: ecs.FargateService;
+  readonly ecrRepository: ecr.Repository;
+
   constructor(scope: cdk.Construct, id: string, props: EcsFargateProps) {
     super(scope, id, props);
 
-    const ecrRepository = new ecr.Repository(this, 'Repository', {
+    this.ecrRepository = new ecr.Repository(this, 'Repository', {
       repositoryName: props.stageConfig.Ecs.ecrRepositoryName,
     });
 
@@ -36,7 +39,7 @@ export class EcsFargate extends cdk.Stack {
     );
 
     fargateTaskDefinition.addContainer('RestApiContainer', {
-      image: ecs.ContainerImage.fromEcrRepository(ecrRepository),
+      image: new ecs.TagParameterContainerImage(this.ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
       logging: ecs.LogDriver.awsLogs({
@@ -47,7 +50,7 @@ export class EcsFargate extends cdk.Stack {
       }),
     });
 
-    const service = new ecs.FargateService(this, 'Service', {
+    this.service = new ecs.FargateService(this, 'Service', {
       cluster,
       taskDefinition: fargateTaskDefinition,
       desiredCount: props.stageConfig.Ecs.service.desiredCount,
@@ -62,7 +65,7 @@ export class EcsFargate extends cdk.Stack {
     if (props?.alb) {
       this.createAlbListenerAndTargetGroup(
         props.alb,
-        service,
+        this.service,
         props.stageConfig.Network
       );
     }
