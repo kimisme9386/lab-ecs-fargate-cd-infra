@@ -6,18 +6,18 @@ app = Flask(__name__)
 
 @app.route('/')
 def welcome():
-    return 'Welcome to flask framework'
+    return 'Welcome to flask framework. Version:2'
 
 
 @app.route('/delay')
 def deploy():
     time.sleep(3)
-    return 'Delay api for test'
+    return 'Delay api for test. Version:2'
 
 
 @app.route('/hello')
 def health_check():
-    return 'ok'
+    return 'ok Version:2'
 
 
 if __name__ == "__main__":
