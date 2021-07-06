@@ -18,5 +18,5 @@ Contains three stacks
 
 Web App for ECS
 
-- Using Python [Flask](https://github.com/pallets/flask) Web Framework in
+- Using Python [Flask](https://github.com/pallets/flask) Web Framework
 - In [flask.d](flask.d) root directory
