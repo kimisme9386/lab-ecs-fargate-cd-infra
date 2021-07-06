@@ -510,7 +510,7 @@ Object {
         "DeploymentController": Object {
           "Type": "ECS",
         },
-        "DesiredCount": 0,
+        "DesiredCount": 2,
         "EnableECSManagedTags": false,
         "HealthCheckGracePeriodSeconds": 0,
         "LaunchType": "FARGATE",
