@@ -138,6 +138,7 @@ export class Pipeline extends cdk.Stack {
               commands: [
                 'cd ./flask.d',
                 'docker build -t $REPOSITORY_URI:$IMAGE_TAG .',
+                'cd ../',
               ],
             },
             post_build: {
