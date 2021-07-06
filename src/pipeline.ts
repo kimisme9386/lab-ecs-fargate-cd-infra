@@ -134,7 +134,7 @@ export class Pipeline extends cdk.Stack {
               commands: [
                 'codebuild-breakpoint # Ref https://docs.aws.amazon.com/codebuild/latest/userguide/session-manager.html',
                 'echo Logging in to Amazon ECR...',
-                '$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)',
+                'aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email',
                 'COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)',
                 'IMAGE_TAG=${COMMIT_HASH:=latest}',
               ],
@@ -143,12 +143,16 @@ export class Pipeline extends cdk.Stack {
               'on-failure': 'ABORT',
               commands: [
                 'cd ./flask.d',
-                'docker build -t $REPOSITORY_URI:$IMAGE_TAG .',
+                'docker build -t $REPOSITORY_URI:latest .',
+                'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG',
                 'cd ../',
               ],
             },
             post_build: {
               commands: [
+                'echo Build completed on $(date)',
+                'echo Pushing the Docker images...',
+                'docker push $REPOSITORY_URI:latest',
                 'docker push $REPOSITORY_URI:$IMAGE_TAG',
                 'printf \'[{"name":"%s","imageUri":"%s"}]\' $ECS_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json',
               ],
