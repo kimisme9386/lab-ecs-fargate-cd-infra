@@ -11,7 +11,7 @@ def welcome():
 
 @app.route('/delay')
 def deploy():
-    time.sleep(3)
+    time.sleep(5)
     return 'Delay api for test. Version:2'
 
 

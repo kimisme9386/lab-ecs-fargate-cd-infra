@@ -13,6 +13,7 @@ Network:
       timeout: 5 # unit: seconds
       healthyThresholdCount: 5
       unhealthyThresholdCount: 2
+    deregistrationDelay: 60 # unit: seconds
 
 Ecs:
   ecrRepositoryName: lab-rest-api

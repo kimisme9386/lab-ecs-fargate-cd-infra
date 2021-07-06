@@ -433,6 +433,12 @@ Object {
         },
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "60",
+          },
+        ],
         "TargetType": "ip",
         "UnhealthyThresholdCount": 2,
         "VpcId": Object {

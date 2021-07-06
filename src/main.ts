@@ -34,6 +34,7 @@ export interface NetworkConfig {
       healthyThresholdCount: number;
       unhealthyThresholdCount: number;
     };
+    deregistrationDelay: number;
   };
 }
 

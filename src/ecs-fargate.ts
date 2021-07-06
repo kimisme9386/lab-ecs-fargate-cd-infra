@@ -119,6 +119,9 @@ export class EcsFargate extends cdk.Stack {
           networkProps.alb.targetHealthCheck.unhealthyThresholdCount,
         healthyHttpCodes: '200',
       },
+      deregistrationDelay: cdk.Duration.seconds(
+        networkProps.alb.deregistrationDelay
+      ),
     });
   }
 }
