@@ -60,6 +60,7 @@ export class EcsFargate extends cdk.Stack {
       minHealthyPercent: props.stageConfig.Ecs.service.minHealthyPercent,
       maxHealthyPercent: props.stageConfig.Ecs.service.maxHealthyPercent,
       healthCheckGracePeriod: cdk.Duration.seconds(0),
+      assignPublicIp: true,
     });
 
     if (props?.alb) {

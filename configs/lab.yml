@@ -25,7 +25,7 @@ Ecs:
       COMPlus_ThreadPool_ForceMinWorkerThreads: '600'
     logGroupName: /ecs/lab-rest-api
   service:
-    desiredCount: 2
+    desiredCount: 0
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: true

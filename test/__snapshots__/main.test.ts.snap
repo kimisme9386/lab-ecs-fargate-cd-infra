@@ -510,7 +510,7 @@ Object {
         "DeploymentController": Object {
           "Type": "ECS",
         },
-        "DesiredCount": 2,
+        "DesiredCount": 0,
         "EnableECSManagedTags": false,
         "HealthCheckGracePeriodSeconds": 0,
         "LaunchType": "FARGATE",
@@ -525,7 +525,7 @@ Object {
         ],
         "NetworkConfiguration": Object {
           "AwsvpcConfiguration": Object {
-            "AssignPublicIp": "DISABLED",
+            "AssignPublicIp": "ENABLED",
             "SecurityGroups": Array [
               Object {
                 "Fn::GetAtt": Array [
