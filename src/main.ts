@@ -46,6 +46,7 @@ interface EcsConfig {
     customManagedPolicies: string[];
   };
   container: {
+    name: string;
     environment: {
       [key: string]: string;
     };
@@ -102,6 +103,7 @@ const ecsFargate = new EcsFargate(app, 'ApiApp', {
 tagResource(ecsFargate);
 
 const pipeline = new Pipeline(app, 'ApiPipeline', {
+  stageConfig,
   fargateService: ecsFargate.service,
   ecrRepository: ecsFargate.ecrRepository,
   env: devEnv,

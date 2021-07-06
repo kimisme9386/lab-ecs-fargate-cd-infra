@@ -38,6 +38,7 @@ test('Snapshot', () => {
     fargateService: stackFargate.service,
     ecrRepository: stackFargate.ecrRepository,
     env,
+    stageConfig,
   });
 
   expect(SynthUtils.toCloudFormation(stackNetwork)).toMatchSnapshot();

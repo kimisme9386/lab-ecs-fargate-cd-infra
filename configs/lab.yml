@@ -19,6 +19,7 @@ Ecs:
   memoryLimitMiB: 512
   cpu: 256
   container:
+    name: RestApiContainer
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
       COMPlus_ThreadPool_ForceMinWorkerThreads: '600'

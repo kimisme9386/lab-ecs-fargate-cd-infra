@@ -7,8 +7,10 @@ import * as iam from '@aws-cdk/aws-iam';
 import { IRole } from '@aws-cdk/aws-iam';
 import * as cdk from '@aws-cdk/core';
 import { CodePipelineStatus } from 'cdk-pipeline-status';
+import { StageConfig } from './main';
 
 interface PipelineProps extends cdk.StackProps {
+  stageConfig: StageConfig;
   fargateService: ecs.FargateService;
   ecrRepository: ecr.IRepository;
 }
@@ -24,7 +26,8 @@ export class Pipeline extends cdk.Stack {
     this.addSourceStage(pipeline, sourceArtifact);
 
     const codebuildProject = this.createCodeBuildWithinCodePipeline(
-      props.ecrRepository
+      props.ecrRepository,
+      props.stageConfig.Ecs.container.name
     );
     const afterBuildArtifact = new codePipeline.Artifact();
 
@@ -113,7 +116,10 @@ export class Pipeline extends cdk.Stack {
     });
   }
 
-  createCodeBuildWithinCodePipeline(ecrRepository: ecr.IRepository) {
+  createCodeBuildWithinCodePipeline(
+    ecrRepository: ecr.IRepository,
+    ecsContainerName: string
+  ) {
     const codeBuild = new codebuild.PipelineProject(
       this,
       'CodeBuildWithinCodePipeline',
@@ -144,7 +150,7 @@ export class Pipeline extends cdk.Stack {
             post_build: {
               commands: [
                 'docker push $REPOSITORY_URI:$IMAGE_TAG',
-                'printf \'[{"name":"lab-ecs-fargate-codedeploy","imageUri":"%s"}]\' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json',
+                'printf \'[{"name":"%s","imageUri":"%s"}]\' $ECS_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json',
               ],
             },
           },
@@ -160,6 +166,9 @@ export class Pipeline extends cdk.Stack {
         environmentVariables: {
           REPOSITORY_URI: {
             value: ecrRepository.repositoryUri,
+          },
+          ECS_CONTAINER_NAME: {
+            value: ecsContainerName,
           },
         },
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),

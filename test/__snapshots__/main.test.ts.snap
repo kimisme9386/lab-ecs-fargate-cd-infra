@@ -916,6 +916,11 @@ Object {
                 ],
               },
             },
+            Object {
+              "Name": "ECS_CONTAINER_NAME",
+              "Type": "PLAINTEXT",
+              "Value": "RestApiContainer",
+            },
           ],
           "Image": "aws/codebuild/standard:4.0",
           "ImagePullCredentialsType": "CODEBUILD",
@@ -955,7 +960,7 @@ Object {
     \\"post_build\\": {
       \\"commands\\": [
         \\"docker push $REPOSITORY_URI:$IMAGE_TAG\\",
-        \\"printf '[{\\\\\\"name\\\\\\":\\\\\\"lab-ecs-fargate-codedeploy\\\\\\",\\\\\\"imageUri\\\\\\":\\\\\\"%s\\\\\\"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\\"
+        \\"printf '[{\\\\\\"name\\\\\\":\\\\\\"%s\\\\\\",\\\\\\"imageUri\\\\\\":\\\\\\"%s\\\\\\"}]' $ECS_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\\"
       ]
     }
   },
