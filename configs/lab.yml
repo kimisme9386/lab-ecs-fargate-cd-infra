@@ -21,8 +21,7 @@ Ecs:
   container:
     name: RestApiContainer
     environment:
-      ASPNETCORE_ENVIRONMENT: Staging
-      COMPlus_ThreadPool_ForceMinWorkerThreads: '600'
+      STAGE: lab
     logGroupName: /ecs/lab-rest-api
   service:
     desiredCount: 2

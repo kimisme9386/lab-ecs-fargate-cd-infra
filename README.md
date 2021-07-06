@@ -20,3 +20,9 @@ Web App for ECS
 
 - Using Python [Flask](https://github.com/pallets/flask) Web Framework
 - In [flask.d](flask.d) root directory
+
+## Usage
+
+Modify [configs/lab.yml] to configure ECS.
+
+The most important property is `desiredCount` which determines how many ECS Tasks should be run.
