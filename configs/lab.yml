@@ -24,7 +24,7 @@ Ecs:
       STAGE: lab
     logGroupName: /ecs/lab-rest-api
   service:
-    desiredCount: 2
+    desiredCount: 0
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: true
