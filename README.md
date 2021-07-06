@@ -23,6 +23,6 @@ Web App for ECS
 
 ## Usage
 
-Modify [configs/lab.yml] to configure ECS.
+Modify [configs/lab.yml](configs/lab.yml) to configure ECS.
 
 The most important property is `desiredCount` which determines how many ECS Tasks should be run.
