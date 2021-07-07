@@ -1,7 +1,7 @@
 Network:
   vpc:
     maxAzs: 2
-    natGateways: 2
+    natGateways: 0
     ipv6enabled: true
   alb:
     listener:
@@ -29,4 +29,4 @@ Ecs:
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: true
-    assignPublicIp: false  # Value is true and ECS Service Subnet type is public, Value is false and ECS Service Subnet type is private.
+    assignPublicIp: true  # Value is true and ECS Service Subnet type is public, Value is false and ECS Service Subnet type is private.

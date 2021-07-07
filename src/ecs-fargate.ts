@@ -23,10 +23,10 @@ export class EcsFargate extends cdk.Stack {
       repositoryName: props.stageConfig.Ecs.ecrRepositoryName,
     });
 
+    const vpc =
+      props?.vpc ?? ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true });
     const cluster = new ecs.Cluster(this, 'Cluster', {
-      vpc:
-        props?.vpc ??
-        ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true }),
+      vpc: vpc,
     });
 
     const fargateTaskDefinition = new ecs.FargateTaskDefinition(
@@ -61,6 +61,12 @@ export class EcsFargate extends cdk.Stack {
       maxHealthyPercent: props.stageConfig.Ecs.service.maxHealthyPercent,
       healthCheckGracePeriod: cdk.Duration.seconds(0),
       assignPublicIp: props.stageConfig.Ecs.service.assignPublicIp,
+      vpcSubnets: vpc.selectSubnets({
+        subnetType:
+          props.stageConfig.Ecs.service.assignPublicIp == true
+            ? ec2.SubnetType.PUBLIC
+            : ec2.SubnetType.PRIVATE,
+      }),
     });
 
     if (props?.alb) {

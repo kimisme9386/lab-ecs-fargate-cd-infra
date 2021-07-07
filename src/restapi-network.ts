@@ -23,6 +23,16 @@ export class RestAPINetwork extends cdk.Stack {
           name: 'ingress',
           subnetType: ec2.SubnetType.PUBLIC,
         },
+        {
+          cidrMask: 24,
+          name: 'application',
+          subnetType: ec2.SubnetType.PRIVATE,
+        },
+        {
+          cidrMask: 28,
+          name: 'rds',
+          subnetType: ec2.SubnetType.ISOLATED,
+        },
       ],
     });
 
