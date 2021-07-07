@@ -58,6 +58,7 @@ interface EcsConfig {
     minHealthyPercent: number;
     maxHealthyPercent: number;
     circuitBreakerRollback: boolean;
+    assignPublicIp: boolean;
   };
 }
 

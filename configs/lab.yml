@@ -29,3 +29,4 @@ Ecs:
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: true
+    assignPublicIp: true
