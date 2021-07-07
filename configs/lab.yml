@@ -28,5 +28,5 @@ Ecs:
     desiredCount: 2
     minHealthyPercent: 100
     maxHealthyPercent: 200
-    circuitBreakerRollback: true
+    circuitBreakerRollback: false
     assignPublicIp: false  # Value is true and ECS Service Subnet type is public, Value is false and ECS Service Subnet type is private.

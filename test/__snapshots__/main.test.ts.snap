@@ -824,7 +824,7 @@ Object {
         "DeploymentConfiguration": Object {
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
-            "Rollback": true,
+            "Rollback": false,
           },
           "MaximumPercent": 200,
           "MinimumHealthyPercent": 100,
