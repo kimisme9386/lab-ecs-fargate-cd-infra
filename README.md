@@ -25,7 +25,7 @@ Modify [configs/lab.yml](configs/lab.yml) to configure ECS.
 
 The most important property is `desiredCount` which determines how many ECS Tasks should be run.
 
-> Notice: desiredCount should be set 0 when first cdk deploy because ECR container image of ECS task hasn't be created yet.
+> :warning: Notice: desiredCount should be set 0 when first cdk deploy because ECR container image of ECS task hasn't be created yet.
 
 Two demo configurations
 
