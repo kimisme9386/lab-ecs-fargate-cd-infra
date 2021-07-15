@@ -13,27 +13,33 @@ export class RestAPINetwork extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props: RestAPINetworkProps) {
     super(scope, id, props);
+
+    const subnetConfiguration = [
+      {
+        cidrMask: 24,
+        name: 'ingress',
+        subnetType: ec2.SubnetType.PUBLIC,
+      },
+      {
+        cidrMask: 28,
+        name: 'rds',
+        subnetType: ec2.SubnetType.ISOLATED,
+      },
+    ];
+
+    if (props.stageConfig.Network.vpc.natGateways != 0) {
+      subnetConfiguration.push({
+        cidrMask: 24,
+        name: 'application',
+        subnetType: ec2.SubnetType.PRIVATE,
+      });
+    }
+
     this.vpc = new ec2.Vpc(this, 'Vpc', {
       cidr: '10.0.0.0/16',
       maxAzs: props.stageConfig.Network.vpc.maxAzs,
       natGateways: props.stageConfig.Network.vpc.natGateways,
-      subnetConfiguration: [
-        {
-          cidrMask: 24,
-          name: 'ingress',
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-        {
-          cidrMask: 24,
-          name: 'application',
-          subnetType: ec2.SubnetType.PRIVATE,
-        },
-        {
-          cidrMask: 28,
-          name: 'rds',
-          subnetType: ec2.SubnetType.ISOLATED,
-        },
-      ],
+      subnetConfiguration: subnetConfiguration,
     });
 
     if (props.stageConfig.Network.vpc.ipv6enabled) this.enableIpv6(this.vpc);
