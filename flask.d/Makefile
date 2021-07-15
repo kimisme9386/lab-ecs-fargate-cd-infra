@@ -7,4 +7,4 @@ build:
 
 .PHONY: run
 run: build
-	docker run -p 9999:9999 flask-app:latest
+	docker run -p 9999:80 flask-app:latest

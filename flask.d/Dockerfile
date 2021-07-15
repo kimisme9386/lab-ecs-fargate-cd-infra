@@ -6,8 +6,8 @@ COPY . /app
 
 RUN yum update -y && \
   yum install -y python3 python3-devel && \
-  pip3 install --upgrade --no-cache-dir pip && \
-  pip3 install --no-cache-dir pipenv
+  pip3 install --upgrade pip && \
+  pip3 install pipenv
 
 RUN pipenv --python 3 && \
   pipenv sync
