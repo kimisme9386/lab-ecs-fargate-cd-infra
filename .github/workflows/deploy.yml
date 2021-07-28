@@ -33,7 +33,7 @@ jobs:
       - name: install aws-cdk
         run: sudo npm i -g aws-cdk@1.111.0
       - name: install npm package
-        run: yarn
+        run: yarn --frozen-lockfile
       - name: update test snapshot
         run: yarn test:update
       - name: build
