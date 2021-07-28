@@ -1,5 +1,5 @@
-import { App, Aws, Construct, Tags } from '@aws-cdk/core';
 import * as fs from 'fs';
+import { App, Aws, Construct, Tags } from '@aws-cdk/core';
 import * as yaml from 'js-yaml';
 import { EcsFargate } from './ecs-fargate';
 import { Pipeline } from './pipeline';

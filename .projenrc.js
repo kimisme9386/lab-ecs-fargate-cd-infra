@@ -89,7 +89,7 @@ deployWorkflow.addJobs({
       },
       {
         name: 'install npm package',
-        run: 'yarn',
+        run: 'yarn --frozen-lockfile',
       },
       {
         name: 'update test snapshot',
