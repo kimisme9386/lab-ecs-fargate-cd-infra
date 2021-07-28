@@ -39,7 +39,6 @@ export interface NetworkConfig {
 }
 
 interface EcsConfig {
-  ecrRepositoryName: string;
   memoryLimitMiB: number;
   cpu: number;
   executionRoleArn: string;
@@ -51,7 +50,6 @@ interface EcsConfig {
     environment: {
       [key: string]: string;
     };
-    logGroupName: string;
   };
   service: {
     desiredCount: number;

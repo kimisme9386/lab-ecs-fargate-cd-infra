@@ -19,9 +19,7 @@ export class EcsFargate extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: EcsFargateProps) {
     super(scope, id, props);
 
-    this.ecrRepository = new ecr.Repository(this, 'Repository', {
-      repositoryName: props.stageConfig.Ecs.ecrRepositoryName,
-    });
+    this.ecrRepository = new ecr.Repository(this, 'Repository');
 
     const vpc =
       props?.vpc ?? ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true });
@@ -43,9 +41,7 @@ export class EcsFargate extends cdk.Stack {
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
       logging: ecs.LogDriver.awsLogs({
-        logGroup: new logs.LogGroup(this, 'EcsLogGroup', {
-          logGroupName: props.stageConfig.Ecs.container.logGroupName,
-        }),
+        logGroup: new logs.LogGroup(this, 'EcsLogGroup'),
         streamPrefix: 'ecs',
       }),
     });
