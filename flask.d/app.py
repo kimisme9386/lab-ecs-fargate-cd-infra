@@ -2,15 +2,17 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+app_version = 3
+
 
 @app.route('/', methods=['GET'])
 def welcome():
-    return 'Welcome to flask framework. Version:2'
+    return f'Welcome to flask framework. Version:{app_version}'
 
 
 @app.route('/hello', methods=['GET'])
 def health_check():
-    return 'It\'s version:2'
+    return f'It\'s version:{app_version}'
 
 
 @app.route('/login', methods=['POST'])
