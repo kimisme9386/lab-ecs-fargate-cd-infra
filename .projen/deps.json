@@ -24,7 +24,7 @@
     },
     {
       "name": "aws-cdk",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "build"
     },
     {
@@ -80,72 +80,82 @@
     },
     {
       "name": "@aws-cdk/assert",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-codebuild",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-codedeploy",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-codepipeline-actions",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-codepipeline",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-ec2",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-ecr",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-ecs-patterns",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-ecs",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-elasticloadbalancingv2",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-iam",
-      "version": "1.111.0",
+      "version": "1.116.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-lambda",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/aws-logs",
-      "version": "1.111.0",
+      "version": "1.116.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/core",
-      "version": "1.111.0",
+      "version": "1.116.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@cloudcomponents/cdk-blue-green-container-deployment",
+      "version": "^1.39.0",
       "type": "runtime"
     },
     {
       "name": "cdk-pipeline-status",
-      "version": "^0.0.48",
+      "version": "^0.1.17",
       "type": "runtime"
     },
     {

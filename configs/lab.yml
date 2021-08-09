@@ -18,13 +18,17 @@ Network:
 Ecs:
   memoryLimitMiB: 512
   cpu: 256
+  family: rest-api
   container:
     name: RestApiContainer
     environment:
-      STAGE: lab
+      STAGE: lab  
   service:
     desiredCount: 0
     minHealthyPercent: 100
     maxHealthyPercent: 200
     circuitBreakerRollback: false
     assignPublicIp: true  # Value is true and ECS Service Subnet type is public, Value is false and ECS Service Subnet type is private.
+
+Deployment:
+  type: BlueGreen # RollingUpdate or BlueGreen

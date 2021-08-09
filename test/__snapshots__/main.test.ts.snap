@@ -30,20 +30,20 @@ Object {
         "Ref": "Vpc8378EB38",
       },
     },
-    "ExportsOutputRefVpcapplicationSubnet1Subnet8B68205B1F66BB2C": Object {
+    "ExportsOutputRefVpcingressSubnet1Subnet059F22C68B714600": Object {
       "Export": Object {
-        "Name": "testStack1:ExportsOutputRefVpcapplicationSubnet1Subnet8B68205B1F66BB2C",
+        "Name": "testStack1:ExportsOutputRefVpcingressSubnet1Subnet059F22C68B714600",
       },
       "Value": Object {
-        "Ref": "VpcapplicationSubnet1Subnet8B68205B",
+        "Ref": "VpcingressSubnet1Subnet059F22C6",
       },
     },
-    "ExportsOutputRefVpcapplicationSubnet2Subnet296709622ABA6FC7": Object {
+    "ExportsOutputRefVpcingressSubnet2SubnetF175D754472AB14E": Object {
       "Export": Object {
-        "Name": "testStack1:ExportsOutputRefVpcapplicationSubnet2Subnet296709622ABA6FC7",
+        "Name": "testStack1:ExportsOutputRefVpcingressSubnet2SubnetF175D754472AB14E",
       },
       "Value": Object {
-        "Ref": "VpcapplicationSubnet2Subnet29670962",
+        "Ref": "VpcingressSubnet2SubnetF175D754",
       },
     },
   },
@@ -156,144 +156,6 @@ Object {
       },
       "Type": "AWS::EC2::VPCGatewayAttachment",
     },
-    "VpcapplicationSubnet1DefaultRouteD1F37131": Object {
-      "Properties": Object {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": Object {
-          "Ref": "VpcingressSubnet1NATGateway5ADD866D",
-        },
-        "RouteTableId": Object {
-          "Ref": "VpcapplicationSubnet1RouteTableF03E8296",
-        },
-      },
-      "Type": "AWS::EC2::Route",
-    },
-    "VpcapplicationSubnet1RouteTableAssociation75D5245D": Object {
-      "Properties": Object {
-        "RouteTableId": Object {
-          "Ref": "VpcapplicationSubnet1RouteTableF03E8296",
-        },
-        "SubnetId": Object {
-          "Ref": "VpcapplicationSubnet1Subnet8B68205B",
-        },
-      },
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-    },
-    "VpcapplicationSubnet1RouteTableF03E8296": Object {
-      "Properties": Object {
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/applicationSubnet1",
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "Vpc8378EB38",
-        },
-      },
-      "Type": "AWS::EC2::RouteTable",
-    },
-    "VpcapplicationSubnet1Subnet8B68205B": Object {
-      "Properties": Object {
-        "AvailabilityZone": Object {
-          "Fn::Select": Array [
-            0,
-            Object {
-              "Fn::GetAZs": "",
-            },
-          ],
-        },
-        "CidrBlock": "10.0.2.0/24",
-        "MapPublicIpOnLaunch": false,
-        "Tags": Array [
-          Object {
-            "Key": "aws-cdk:subnet-name",
-            "Value": "application",
-          },
-          Object {
-            "Key": "aws-cdk:subnet-type",
-            "Value": "Private",
-          },
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/applicationSubnet1",
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "Vpc8378EB38",
-        },
-      },
-      "Type": "AWS::EC2::Subnet",
-    },
-    "VpcapplicationSubnet2DefaultRoute928D347B": Object {
-      "Properties": Object {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": Object {
-          "Ref": "VpcingressSubnet2NATGatewayDAA0F549",
-        },
-        "RouteTableId": Object {
-          "Ref": "VpcapplicationSubnet2RouteTable17378AED",
-        },
-      },
-      "Type": "AWS::EC2::Route",
-    },
-    "VpcapplicationSubnet2RouteTable17378AED": Object {
-      "Properties": Object {
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/applicationSubnet2",
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "Vpc8378EB38",
-        },
-      },
-      "Type": "AWS::EC2::RouteTable",
-    },
-    "VpcapplicationSubnet2RouteTableAssociationF25110CC": Object {
-      "Properties": Object {
-        "RouteTableId": Object {
-          "Ref": "VpcapplicationSubnet2RouteTable17378AED",
-        },
-        "SubnetId": Object {
-          "Ref": "VpcapplicationSubnet2Subnet29670962",
-        },
-      },
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-    },
-    "VpcapplicationSubnet2Subnet29670962": Object {
-      "Properties": Object {
-        "AvailabilityZone": Object {
-          "Fn::Select": Array [
-            1,
-            Object {
-              "Fn::GetAZs": "",
-            },
-          ],
-        },
-        "CidrBlock": "10.0.3.0/24",
-        "MapPublicIpOnLaunch": false,
-        "Tags": Array [
-          Object {
-            "Key": "aws-cdk:subnet-name",
-            "Value": "application",
-          },
-          Object {
-            "Key": "aws-cdk:subnet-type",
-            "Value": "Private",
-          },
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/applicationSubnet2",
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "Vpc8378EB38",
-        },
-      },
-      "Type": "AWS::EC2::Subnet",
-    },
     "VpcingressSubnet1DefaultRoute4188A546": Object {
       "DependsOn": Array [
         "VpcVPCGWBF912B6E",
@@ -308,38 +170,6 @@ Object {
         },
       },
       "Type": "AWS::EC2::Route",
-    },
-    "VpcingressSubnet1EIPD1FA297B": Object {
-      "Properties": Object {
-        "Domain": "vpc",
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/ingressSubnet1",
-          },
-        ],
-      },
-      "Type": "AWS::EC2::EIP",
-    },
-    "VpcingressSubnet1NATGateway5ADD866D": Object {
-      "Properties": Object {
-        "AllocationId": Object {
-          "Fn::GetAtt": Array [
-            "VpcingressSubnet1EIPD1FA297B",
-            "AllocationId",
-          ],
-        },
-        "SubnetId": Object {
-          "Ref": "VpcingressSubnet1Subnet059F22C6",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/ingressSubnet1",
-          },
-        ],
-      },
-      "Type": "AWS::EC2::NatGateway",
     },
     "VpcingressSubnet1RouteTable804C7A26": Object {
       "Properties": Object {
@@ -437,38 +267,6 @@ Object {
         },
       },
       "Type": "AWS::EC2::Route",
-    },
-    "VpcingressSubnet2EIP87470ECB": Object {
-      "Properties": Object {
-        "Domain": "vpc",
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/ingressSubnet2",
-          },
-        ],
-      },
-      "Type": "AWS::EC2::EIP",
-    },
-    "VpcingressSubnet2NATGatewayDAA0F549": Object {
-      "Properties": Object {
-        "AllocationId": Object {
-          "Fn::GetAtt": Array [
-            "VpcingressSubnet2EIP87470ECB",
-            "AllocationId",
-          ],
-        },
-        "SubnetId": Object {
-          "Ref": "VpcingressSubnet2SubnetF175D754",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "Name",
-            "Value": "testStack1/Vpc/ingressSubnet2",
-          },
-        ],
-      },
-      "Type": "AWS::EC2::NatGateway",
     },
     "VpcingressSubnet2RouteTable8B0E23A7": Object {
       "Properties": Object {
@@ -587,7 +385,7 @@ Object {
             },
           ],
         },
-        "CidrBlock": "10.0.4.0/28",
+        "CidrBlock": "10.0.2.0/28",
         "MapPublicIpOnLaunch": false,
         "Tags": Array [
           Object {
@@ -644,7 +442,7 @@ Object {
             },
           ],
         },
-        "CidrBlock": "10.0.4.16/28",
+        "CidrBlock": "10.0.2.16/28",
         "MapPublicIpOnLaunch": false,
         "Tags": Array [
           Object {
@@ -717,7 +515,7 @@ Object {
       "Properties": Object {
         "Certificates": Array [
           Object {
-            "CertificateArn": "arn:aws:acm:ap-northeast-1:482631629698:certificate/6ba7f53f-b622-4627-b880-955c382245de",
+            "CertificateArn": "arn:aws:acm:ap-northeast-1:048132608410:certificate/bb183acc-7a83-4ff4-8c11-4c8df960b0e2",
           },
         ],
         "DefaultActions": Array [
@@ -798,7 +596,6 @@ Object {
     "EcsLogGroupD0138CE7": Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
-        "LogGroupName": "/ecs/lab-rest-api",
         "RetentionInDays": 731,
       },
       "Type": "AWS::Logs::LogGroup",
@@ -806,9 +603,6 @@ Object {
     },
     "Repository22E53BBD": Object {
       "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "RepositoryName": "lab-rest-api",
-      },
       "Type": "AWS::ECR::Repository",
       "UpdateReplacePolicy": "Retain",
     },
@@ -847,7 +641,7 @@ Object {
         ],
         "NetworkConfiguration": Object {
           "AwsvpcConfiguration": Object {
-            "AssignPublicIp": "DISABLED",
+            "AssignPublicIp": "ENABLED",
             "SecurityGroups": Array [
               Object {
                 "Fn::GetAtt": Array [
@@ -858,10 +652,10 @@ Object {
             ],
             "Subnets": Array [
               Object {
-                "Fn::ImportValue": "testStack1:ExportsOutputRefVpcapplicationSubnet1Subnet8B68205B1F66BB2C",
+                "Fn::ImportValue": "testStack1:ExportsOutputRefVpcingressSubnet1Subnet059F22C68B714600",
               },
               Object {
-                "Fn::ImportValue": "testStack1:ExportsOutputRefVpcapplicationSubnet2Subnet296709622ABA6FC7",
+                "Fn::ImportValue": "testStack1:ExportsOutputRefVpcingressSubnet2SubnetF175D754472AB14E",
               },
             ],
           },
@@ -1116,62 +910,6 @@ Object {
 
 exports[`Snapshot 3`] = `
 Object {
-  "Outputs": Object {
-    "BadgeUrl": Object {
-      "Value": Object {
-        "Fn::Join": Array [
-          "",
-          Array [
-            "https://",
-            Object {
-              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
-            },
-            ".s3-ap-northeast-1.amazonaws.com/latest-build.svg#1",
-          ],
-        ],
-      },
-    },
-    "CodePipelineLink": Object {
-      "Value": Object {
-        "Fn::Join": Array [
-          "",
-          Array [
-            "https://",
-            Object {
-              "Ref": "AWS::Region",
-            },
-            ".console.aws.amazon.com/codesuite/codepipeline/pipelines/",
-            Object {
-              "Ref": "PipelineC660917D",
-            },
-            "/view",
-          ],
-        ],
-      },
-    },
-    "CodePipelineStatusbadgeMarkdownLink09FB99F3": Object {
-      "Value": Object {
-        "Fn::Join": Array [
-          "",
-          Array [
-            "[![Build Status](https://",
-            Object {
-              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
-            },
-            ".s3-ap-northeast-1.amazonaws.com/latest-build.svg#1)](https://",
-            Object {
-              "Ref": "AWS::Region",
-            },
-            ".console.aws.amazon.com/codesuite/codepipeline/pipelines/",
-            Object {
-              "Ref": "PipelineC660917D",
-            },
-            "/view)",
-          ],
-        ],
-      },
-    },
-  },
   "Resources": Object {
     "CodeBuildWithinCodePipeline0585DD46": Object {
       "Properties": Object {
@@ -1471,7 +1209,7 @@ Object {
             Object {
               "Action": "codestar-connections:UseConnection",
               "Effect": "Allow",
-              "Resource": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
+              "Resource": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
             },
           ],
           "Version": "2012-10-17",
@@ -1480,288 +1218,6 @@ Object {
         "Roles": Array [
           Object {
             "Ref": "CodeBuildWithinCodePipelineRole25ABC114",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "CodePipelineStatusBadgeBucketEC4C6A0A": Object {
-      "DeletionPolicy": "Retain",
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "CodePipelineStatusBadgeBucketPolicy5CAFDBCD": Object {
-      "Properties": Object {
-        "Bucket": Object {
-          "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
-        },
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "s3:GetObject",
-              "Effect": "Allow",
-              "Principal": "*",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
-                        "CodePipelineStatusBadgeBucketEC4C6A0A",
-                        "Arn",
-                      ],
-                    },
-                    "/*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "CodePipelineStatusCodePipelineCodePipelineChangeAllowEventRuleApiPipelineCodePipelineStatusCodepipelineEventLambda266122B66D34D5E7": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "CodePipelineStatusCodepipelineEventLambda81D12435",
-            "Arn",
-          ],
-        },
-        "Principal": "events.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::GetAtt": Array [
-            "CodePipelineStatusCodePipelineCodePipelineChangeE4090DB6",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "CodePipelineStatusCodePipelineCodePipelineChangeE4090DB6": Object {
-      "Properties": Object {
-        "EventPattern": Object {
-          "detail-type": Array [
-            "CodePipeline Pipeline Execution State Change",
-          ],
-          "resources": Array [
-            Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "arn:",
-                  Object {
-                    "Ref": "AWS::Partition",
-                  },
-                  ":codepipeline:",
-                  Object {
-                    "Ref": "AWS::Region",
-                  },
-                  ":",
-                  Object {
-                    "Ref": "AWS::AccountId",
-                  },
-                  ":",
-                  Object {
-                    "Ref": "PipelineC660917D",
-                  },
-                ],
-              ],
-            },
-          ],
-          "source": Array [
-            "aws.codepipeline",
-          ],
-        },
-        "State": "ENABLED",
-        "Targets": Array [
-          Object {
-            "Arn": Object {
-              "Fn::GetAtt": Array [
-                "CodePipelineStatusCodepipelineEventLambda81D12435",
-                "Arn",
-              ],
-            },
-            "Id": "Target0",
-          },
-        ],
-      },
-      "Type": "AWS::Events::Rule",
-    },
-    "CodePipelineStatusCodepipelineEventLambda81D12435": Object {
-      "DependsOn": Array [
-        "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470",
-        "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
-      ],
-      "Properties": Object {
-        "Code": Object {
-          "ImageUri": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                Object {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                Object {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                Object {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/aws-cdk/assets:2799ca43f7ef1607a6fbd514461315ce39509a1a014e4b6da2e748c2bc78a0fc",
-              ],
-            ],
-          },
-        },
-        "Environment": Object {
-          "Variables": Object {
-            "BADGE_BUCKET_IMAGE_KEY_NAME": "latest-build.svg",
-            "BADGE_BUCKET_NAME": Object {
-              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
-            },
-            "CODE_PIPELINE_NAME": Object {
-              "Ref": "PipelineC660917D",
-            },
-            "GITHUB_PERSONAL_TOKEN": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:482631629698:secret:codepipeline/lambda/github-token-YWWmII:SecretString:codepipeline/lambda/github-token::}}",
-            "SLACK_WEBHOOK_URL": "",
-            "STAGE": "",
-          },
-        },
-        "ImageConfig": Object {
-          "Command": Array [
-            "codepipelineEventLambda.handler",
-          ],
-        },
-        "PackageType": "Image",
-        "Role": Object {
-          "Fn::GetAtt": Array [
-            "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
-            "Arn",
-          ],
-        },
-        "Tags": Array [
-          Object {
-            "Key": "CDK-CfnStackId",
-            "Value": Object {
-              "Ref": "AWS::StackId",
-            },
-          },
-          Object {
-            "Key": "CDK-CfnStackName",
-            "Value": Object {
-              "Ref": "AWS::StackName",
-            },
-          },
-        ],
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": Array [
-          Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "arn:",
-                Object {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-          Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "arn:",
-                Object {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
-              ],
-            ],
-          },
-        ],
-        "Tags": Array [
-          Object {
-            "Key": "CDK-CfnStackId",
-            "Value": Object {
-              "Ref": "AWS::StackId",
-            },
-          },
-          Object {
-            "Key": "CDK-CfnStackName",
-            "Value": Object {
-              "Ref": "AWS::StackName",
-            },
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject*",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": Array [
-                Object {
-                  "Fn::GetAtt": Array [
-                    "CodePipelineStatusBadgeBucketEC4C6A0A",
-                    "Arn",
-                  ],
-                },
-                Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      Object {
-                        "Fn::GetAtt": Array [
-                          "CodePipelineStatusBadgeBucketEC4C6A0A",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470",
-        "Roles": Array [
-          Object {
-            "Ref": "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
           },
         ],
       },
@@ -1881,7 +1337,7 @@ Object {
                 },
                 "Configuration": Object {
                   "BranchName": "main",
-                  "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
+                  "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
                   "FullRepositoryId": "kimisme9386/lab-ecs-fargate-cd-infra",
                   "OutputArtifactFormat": "CODEBUILD_CLONE_REF",
                 },
@@ -2216,7 +1672,7 @@ Object {
             Object {
               "Action": "codestar-connections:UseConnection",
               "Effect": "Allow",
-              "Resource": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
+              "Resource": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
             },
             Object {
               "Action": Array [

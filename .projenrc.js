@@ -1,6 +1,6 @@
 const { AwsCdkTypeScriptApp } = require('projen');
 const project = new AwsCdkTypeScriptApp({
-  cdkVersion: '1.111.0',
+  cdkVersion: '1.116.0',
   cdkVersionPinning: true,
   defaultReleaseBranch: 'main',
   name: 'lab-ecs-fargate-cd-infra',
@@ -17,9 +17,14 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-codebuild',
     '@aws-cdk/aws-codepipeline-actions',
     '@aws-cdk/aws-codedeploy',
+    '@aws-cdk/aws-lambda',
   ],
   devDeps: ['@types/js-yaml@^3.12.5'],
-  deps: ['js-yaml@^3.14.1', 'cdk-pipeline-status@^0.0.48'],
+  deps: [
+    'js-yaml@^3.14.1',
+    '@cloudcomponents/cdk-blue-green-container-deployment@^1.39.0',
+    'cdk-pipeline-status@^0.1.17',
+  ],
   releaseWorkflow: false,
   context: {
     'availability-zones:account=482631629698:region=ap-northeast-1': [

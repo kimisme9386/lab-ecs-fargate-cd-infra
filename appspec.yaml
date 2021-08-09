@@ -1,0 +1,38 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "task-definition-ARN"
+        LoadBalancerInfo:
+          ContainerName: "RestApiContainer"
+          ContainerPort: 80
+# Optional properties
+        # PlatformVersion: "LATEST"
+        # NetworkConfiguration:
+        #     AwsvpcConfiguration:
+        #       Subnets: ["subnet-name-1", "subnet-name-2"]
+        #       SecurityGroups: ["security-group"]
+        #       AssignPublicIp: "ENABLED"
+# Hooks:
+#   - BeforeInstall: "BeforeInstallHookFunctionName"
+#     timeout: 300
+#   - AfterInstall: "AfterInstallHookFunctionName"
+#     timeout: 300
+#   - AfterAllowTestTraffic: "AfterAllowTestTrafficHookFunctionName"
+#     timeout: 300
+#   - BeforeAllowTraffic: "BeforeAllowTrafficHookFunctionName"
+#     timeout: 300
+#   - AfterAllowTraffic: "AfterAllowTrafficHookFunctionName"
+#     timeout: 300
+Hooks:
+  - BeforeInstall: "BlueGreenDeploymentHook"
+    timeout: 300
+  - AfterInstall: "BlueGreenDeploymentHook"
+    timeout: 300
+  - AfterAllowTestTraffic: "BlueGreenDeploymentHook"
+    timeout: 300
+  - BeforeAllowTraffic: "BlueGreenDeploymentHook"
+    timeout: 300
+  - AfterAllowTraffic: "BlueGreenDeploymentHook"
+    timeout: 300

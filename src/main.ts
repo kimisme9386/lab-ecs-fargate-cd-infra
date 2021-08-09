@@ -14,6 +14,7 @@ enum Stage {
 export interface StageConfig {
   Network: NetworkConfig;
   Ecs: EcsConfig;
+  Deployment: DeploymentConfig;
 }
 
 export interface NetworkConfig {
@@ -41,6 +42,7 @@ export interface NetworkConfig {
 interface EcsConfig {
   memoryLimitMiB: number;
   cpu: number;
+  family: string;
   executionRoleArn: string;
   taskRole: {
     customManagedPolicies: string[];
@@ -58,6 +60,10 @@ interface EcsConfig {
     circuitBreakerRollback: boolean;
     assignPublicIp: boolean;
   };
+}
+
+interface DeploymentConfig {
+  type: string;
 }
 
 function readConfig(stageName: string): any {
@@ -102,11 +108,24 @@ const ecsFargate = new EcsFargate(app, 'ApiApp', {
 
 tagResource(ecsFargate);
 
+let blueGreenOptions = {};
+
+if (stageConfig.Deployment.type == 'blueGreen') {
+  blueGreenOptions = {
+    prodTrafficListener: ecsFargate.prodTrafficListener,
+    prodTargetGroup: ecsFargate.prodTargetGroup,
+    testTrafficListener: ecsFargate.testTrafficListener,
+    testTargetGroup: ecsFargate.testTargetGroup,
+    taskDefinition: ecsFargate.taskDefinition,
+  };
+}
+
 const pipeline = new Pipeline(app, 'ApiPipeline', {
   stageConfig,
   fargateService: ecsFargate.service,
   ecrRepository: ecsFargate.ecrRepository,
   env: devEnv,
+  ...blueGreenOptions,
 });
 
 tagResource(pipeline);

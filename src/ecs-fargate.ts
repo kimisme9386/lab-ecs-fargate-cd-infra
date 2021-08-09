@@ -14,7 +14,12 @@ interface EcsFargateProps extends cdk.StackProps {
 
 export class EcsFargate extends cdk.Stack {
   readonly service: ecs.FargateService;
+  readonly taskDefinition: ecs.FargateTaskDefinition;
   readonly ecrRepository: ecr.Repository;
+  readonly prodTrafficListener: elbv2.ApplicationListener | null = null;
+  readonly prodTargetGroup: elbv2.ApplicationTargetGroup | null = null;
+  readonly testTrafficListener: elbv2.ApplicationListener | null = null;
+  readonly testTargetGroup: elbv2.ApplicationTargetGroup | null = null;
 
   constructor(scope: cdk.Construct, id: string, props: EcsFargateProps) {
     super(scope, id, props);
@@ -27,16 +32,13 @@ export class EcsFargate extends cdk.Stack {
       vpc: vpc,
     });
 
-    const fargateTaskDefinition = new ecs.FargateTaskDefinition(
-      this,
-      'TaskDef',
-      {
-        memoryLimitMiB: props.stageConfig.Ecs.memoryLimitMiB,
-        cpu: props.stageConfig.Ecs.cpu,
-      }
-    );
+    this.taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDef', {
+      memoryLimitMiB: props.stageConfig.Ecs.memoryLimitMiB,
+      cpu: props.stageConfig.Ecs.cpu,
+      family: props.stageConfig.Ecs.family,
+    });
 
-    fargateTaskDefinition.addContainer(props.stageConfig.Ecs.container.name, {
+    this.taskDefinition.addContainer(props.stageConfig.Ecs.container.name, {
       image: ecs.ContainerImage.fromEcrRepository(this.ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
@@ -48,7 +50,7 @@ export class EcsFargate extends cdk.Stack {
 
     this.service = new ecs.FargateService(this, 'Service', {
       cluster,
-      taskDefinition: fargateTaskDefinition,
+      taskDefinition: this.taskDefinition,
       desiredCount: props.stageConfig.Ecs.service.desiredCount,
       circuitBreaker: {
         rollback: props.stageConfig.Ecs.service.circuitBreakerRollback,
@@ -66,34 +68,64 @@ export class EcsFargate extends cdk.Stack {
     });
 
     if (props?.alb) {
-      this.createAlbListenerAndTargetGroup(
+      let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
+        'Prod',
         props.alb,
         this.service,
-        props.stageConfig.Network
+        props.stageConfig.Network,
+        443,
+        80
       );
+
+      this.prodTrafficListener = listener;
+      this.prodTargetGroup = targetGroup;
+
+      if (props.stageConfig.Deployment.type == 'blueGreen') {
+        let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
+          'Test',
+          props.alb,
+          this.service,
+          props.stageConfig.Network,
+          8080,
+          80
+        );
+
+        this.testTrafficListener = listener;
+        this.testTargetGroup = targetGroup;
+      }
     }
   }
 
   private createAlbListenerAndTargetGroup(
+    prefixName: string,
     alb: elbv2.IApplicationLoadBalancer,
     service: ecs.FargateService,
-    networkProps: NetworkConfig
-  ): void {
-    const listener = new elbv2.ApplicationListener(this, 'AlbListener', {
-      loadBalancer: alb,
-      port: 443,
-      sslPolicy: elbv2.SslPolicy.RECOMMENDED,
-    });
+    networkProps: NetworkConfig,
+    loadBalancerPort: number,
+    targetGroupPort: number
+  ): {
+      listener: elbv2.ApplicationListener;
+      targetGroup: elbv2.ApplicationTargetGroup;
+    } {
+    const listener = new elbv2.ApplicationListener(
+      this,
+      `Alb${prefixName}Listener`,
+      {
+        loadBalancer: alb,
+        port: loadBalancerPort,
+        sslPolicy: elbv2.SslPolicy.RECOMMENDED,
+      }
+    );
 
     if (networkProps.alb?.listener?.certificateArn) {
-      listener.addCertificates('AlbListenerCertification', [
+      listener.addCertificates(`Alb${prefixName}ListenerCertification`, [
         {
           certificateArn: networkProps.alb.listener.certificateArn,
         },
       ]);
     }
 
-    new elbv2.ApplicationListenerRule(this, 'AlbListenerRule', {
+    new elbv2.ApplicationListenerRule(this, `Alb${prefixName}ListenerRule`, {
       listener: listener,
       priority: 10,
       action: elbv2.ListenerAction.fixedResponse(200, {
@@ -103,8 +135,8 @@ export class EcsFargate extends cdk.Stack {
       conditions: [elbv2.ListenerCondition.pathPatterns(['/status'])],
     });
 
-    listener.addTargets('ECS', {
-      port: 80,
+    const targetGroup = listener.addTargets(`ECSFor${prefixName}`, {
+      port: targetGroupPort,
       targets: [service],
       healthCheck: {
         enabled: networkProps.alb.targetHealthCheck.enabled,
@@ -125,5 +157,7 @@ export class EcsFargate extends cdk.Stack {
         networkProps.alb.deregistrationDelay
       ),
     });
+
+    return { listener, targetGroup };
   }
 }
