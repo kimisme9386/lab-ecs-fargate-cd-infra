@@ -1,5 +1,5 @@
 {
-    "executionRoleArn": "arn:aws:iam::account_ID:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::482631629698:role/ApiApp-TaskDefExecutionRoleB4775C97-DRWH3H0E5IZZ",
     "containerDefinitions": [
         {
             "name": "RestApiContainer",

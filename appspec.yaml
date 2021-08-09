@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "task-definition-ARN"
+        TaskDefinition: "arn:aws:ecs:ap-northeast-1:482631629698:task-definition/rest-api:1"
         LoadBalancerInfo:
           ContainerName: "RestApiContainer"
           ContainerPort: 80
