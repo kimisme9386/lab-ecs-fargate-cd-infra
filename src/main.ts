@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { App, Aws, Construct, Tags } from '@aws-cdk/core';
 import * as yaml from 'js-yaml';
 import { EcsFargate } from './ecs-fargate';
-import { Pipeline } from './pipeline';
+import { DeploymentType, Pipeline } from './pipeline';
 import { RestAPINetwork } from './restapi-network';
 
 enum Stage {
@@ -110,17 +110,19 @@ tagResource(ecsFargate);
 
 let blueGreenOptions = {};
 
-if (stageConfig.Deployment.type == 'blueGreen') {
+if (stageConfig.Deployment.type == DeploymentType.BlueGreen) {
   blueGreenOptions = {
-    prodTrafficListener: ecsFargate.prodTrafficListener,
-    prodTargetGroup: ecsFargate.prodTargetGroup,
-    testTrafficListener: ecsFargate.testTrafficListener,
-    testTargetGroup: ecsFargate.testTargetGroup,
-    taskDefinition: ecsFargate.taskDefinition,
+    blueGreenOptions: {
+      prodTrafficListener: ecsFargate.prodTrafficListener,
+      prodTargetGroup: ecsFargate.prodTargetGroup,
+      testTrafficListener: ecsFargate.testTrafficListener,
+      testTargetGroup: ecsFargate.testTargetGroup,
+      taskDefinition: ecsFargate.taskDefinition,
+    },
   };
 }
 
-const pipeline = new Pipeline(app, 'ApiPipeline', {
+new Pipeline(app, 'ApiPipeline', {
   stageConfig,
   fargateService: ecsFargate.service,
   ecrRepository: ecsFargate.ecrRepository,
@@ -128,7 +130,7 @@ const pipeline = new Pipeline(app, 'ApiPipeline', {
   ...blueGreenOptions,
 });
 
-tagResource(pipeline);
+// tagResource(pipeline);
 
 ecsFargate.addDependency(restAPINetwork);
 

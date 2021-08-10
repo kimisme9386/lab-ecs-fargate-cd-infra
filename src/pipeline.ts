@@ -13,7 +13,7 @@ import { EcsDeploymentGroup } from '@cloudcomponents/cdk-blue-green-container-de
 import { CodePipelineStatus } from 'cdk-pipeline-status';
 import { StageConfig } from './main';
 
-enum DeploymentType {
+export enum DeploymentType {
   RollingUpdate = 'RollingUpdate',
   BlueGreen = 'BlueGreen',
 }
@@ -86,9 +86,7 @@ export class Pipeline extends cdk.Stack {
         props.fargateService,
         imageArtifact
       );
-    } else if (
-      props.stageConfig.Deployment.type == DeploymentType.RollingUpdate
-    ) {
+    } else if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
       if (!props.blueGreenOptions) {
         throw new Error(
           'blueGreenOptions is required when using blueGreen Type.'

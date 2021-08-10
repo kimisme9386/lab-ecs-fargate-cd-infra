@@ -5,6 +5,7 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
 import { NetworkConfig, StageConfig } from './main';
+import { DeploymentType } from './pipeline';
 
 interface EcsFargateProps extends cdk.StackProps {
   stageConfig: StageConfig;
@@ -48,13 +49,26 @@ export class EcsFargate extends cdk.Stack {
       }),
     });
 
+    let ecsServiceProperty = {};
+    if (props.stageConfig.Deployment.type == DeploymentType.RollingUpdate) {
+      ecsServiceProperty = {
+        circuitBreaker: {
+          rollback: props.stageConfig.Ecs.service.circuitBreakerRollback,
+        },
+      };
+    } else if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
+      ecsServiceProperty = {
+        deploymentController: {
+          // The property has a bug because type value is always ECS.
+          type: ecs.DeploymentControllerType.CODE_DEPLOY,
+        },
+      };
+    }
+
     this.service = new ecs.FargateService(this, 'Service', {
       cluster,
       taskDefinition: this.taskDefinition,
       desiredCount: props.stageConfig.Ecs.service.desiredCount,
-      circuitBreaker: {
-        rollback: props.stageConfig.Ecs.service.circuitBreakerRollback,
-      },
       minHealthyPercent: props.stageConfig.Ecs.service.minHealthyPercent,
       maxHealthyPercent: props.stageConfig.Ecs.service.maxHealthyPercent,
       healthCheckGracePeriod: cdk.Duration.seconds(0),
@@ -65,7 +79,14 @@ export class EcsFargate extends cdk.Stack {
             ? ec2.SubnetType.PUBLIC
             : ec2.SubnetType.PRIVATE,
       }),
+      ...ecsServiceProperty,
     });
+
+    if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
+      // workaround
+      const cfnECSService = this.service.node.defaultChild as ecs.CfnService;
+      cfnECSService.addPropertyOverride('DeploymentController', 'CODE_DEPLOY');
+    }
 
     if (props?.alb) {
       let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
@@ -80,7 +101,7 @@ export class EcsFargate extends cdk.Stack {
       this.prodTrafficListener = listener;
       this.prodTargetGroup = targetGroup;
 
-      if (props.stageConfig.Deployment.type == 'blueGreen') {
+      if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
         let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
           'Test',
           props.alb,
@@ -107,17 +128,24 @@ export class EcsFargate extends cdk.Stack {
       listener: elbv2.ApplicationListener;
       targetGroup: elbv2.ApplicationTargetGroup;
     } {
+    const sslPolicy =
+      prefixName == 'Prod'
+        ? {
+          sslPolicy: elbv2.SslPolicy.RECOMMENDED,
+        }
+        : '';
+
     const listener = new elbv2.ApplicationListener(
       this,
       `Alb${prefixName}Listener`,
       {
         loadBalancer: alb,
         port: loadBalancerPort,
-        sslPolicy: elbv2.SslPolicy.RECOMMENDED,
+        ...sslPolicy,
       }
     );
 
-    if (networkProps.alb?.listener?.certificateArn) {
+    if (prefixName == 'Prod' && networkProps.alb?.listener?.certificateArn) {
       listener.addCertificates(`Alb${prefixName}ListenerCertification`, [
         {
           certificateArn: networkProps.alb.listener.certificateArn,
