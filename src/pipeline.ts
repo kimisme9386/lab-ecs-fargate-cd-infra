@@ -335,7 +335,7 @@ export class Pipeline extends cdk.Stack {
                 'echo Pushing the Docker images...',
                 'docker push $REPOSITORY_URI:latest',
                 'docker push $REPOSITORY_URI:$IMAGE_TAG',
-                'printf \'[{"ImageURI":"%s"}]\' $ECS_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json',
+                'printf \'[{"ImageURI":"%s"}]\' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json',
               ],
             },
           },
