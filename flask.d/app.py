@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-app_version = 3
+app_version = "Blue/Green CodeDeploy 1"
 
 
 @app.route('/', methods=['GET'])
