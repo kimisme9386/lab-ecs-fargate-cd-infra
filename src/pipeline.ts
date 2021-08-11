@@ -65,11 +65,11 @@ export class Pipeline extends cdk.Stack {
       );
     }
 
-    const imageArtifact = new codePipeline.Artifact();
+    const imageArtifact = new codePipeline.Artifact('imageDetail');
     let manifestArtifact = null;
 
     if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
-      manifestArtifact = new codePipeline.Artifact();
+      manifestArtifact = new codePipeline.Artifact('manifest');
     }
 
     this.addBuildStage(
@@ -340,8 +340,11 @@ export class Pipeline extends cdk.Stack {
             },
           },
           artifacts: {
-            'files': ['imageDetail.json'],
+            'files': ['*'],
             'secondary-artifacts': {
+              imageDetail: {
+                files: ['imageDetail.json'],
+              },
               manifest: {
                 files: ['taskdef.json', 'appspec.yaml'],
               },
