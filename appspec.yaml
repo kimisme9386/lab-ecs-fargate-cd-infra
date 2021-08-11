@@ -27,12 +27,7 @@ Resources:
 #     timeout: 300
 Hooks:
   - BeforeInstall: "BlueGreenDeploymentHook"
-    timeout: 300
   - AfterInstall: "BlueGreenDeploymentHook"
-    timeout: 300
   - AfterAllowTestTraffic: "BlueGreenDeploymentHook"
-    timeout: 300
   - BeforeAllowTraffic: "BlueGreenDeploymentHook"
-    timeout: 300
   - AfterAllowTraffic: "BlueGreenDeploymentHook"
-    timeout: 300
