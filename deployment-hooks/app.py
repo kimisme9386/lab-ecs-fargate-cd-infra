@@ -19,5 +19,5 @@ def handler(event, context):
     client.put_lifecycle_event_hook_execution_status(
         deploymentId=deployment_id,
         lifecycleEventHookExecutionId=lifecycle_eventhook_execution_id,
-        status='Failed'
+        status='Succeeded'
     )
