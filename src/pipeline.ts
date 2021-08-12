@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as codebuild from '@aws-cdk/aws-codebuild';
+import * as codedeploy from '@aws-cdk/aws-codedeploy';
 import * as codePipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as ecr from '@aws-cdk/aws-ecr';
@@ -111,6 +112,7 @@ export class Pipeline extends cdk.Stack {
     imageArtifact: codePipeline.Artifact,
     manifestArtifact: codePipeline.Artifact
   ) {
+    // codedeploy.EcsDeploymentConfig.fromEcsDeploymentConfigName
     const deploymentGroup = new EcsDeploymentGroup(this, 'DeploymentGroup', {
       applicationName: 'ecs-blue-green-application',
       deploymentGroupName: 'ecs-blue-green-deployment-group',
@@ -130,7 +132,8 @@ export class Pipeline extends cdk.Stack {
       testTrafficListener: {
         listenerArn: blueGreenOptions.testTrafficListener.listenerArn,
       },
-      terminationWaitTimeInMinutes: 100,
+      terminationWaitTimeInMinutes: 20,
+      deploymentConfig: codedeploy.EcsDeploymentConfig.ALL_AT_ONCE,
     });
 
     pipeline.addStage({
@@ -374,16 +377,29 @@ export class Pipeline extends cdk.Stack {
   }
 
   createDeploymentHooksLambda() {
-    new lambda.DockerImageFunction(this, 'BlueGreenDeploymentHook', {
-      functionName: 'BlueGreenDeploymentHook',
-      code: lambda.DockerImageCode.fromImageAsset(
-        path.join(__dirname, '../deployment-hooks')
-      ),
-      environment: {
-        REGION: cdk.Aws.REGION,
-        DEBUG: 'true',
-      },
-    });
+    const hookLambda = new lambda.DockerImageFunction(
+      this,
+      'BlueGreenDeploymentHook',
+      {
+        functionName: 'BlueGreenDeploymentHook',
+        code: lambda.DockerImageCode.fromImageAsset(
+          path.join(__dirname, '../deployment-hooks')
+        ),
+        environment: {
+          REGION: cdk.Aws.REGION,
+          DEBUG: 'true',
+        },
+      }
+    );
+
+    hookLambda.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['codedeploy:PutLifecycleEventHookExecutionStatus'],
+        resources: [
+          `arn:aws:codedeploy:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:deploymentgroup:ecs-blue-green-application/ecs-blue-green-deployment-group`,
+        ],
+      })
+    );
   }
 
   addSourceStage(
@@ -400,6 +416,8 @@ export class Pipeline extends cdk.Stack {
           output: sourceArtifact,
           connectionArn:
             'arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6',
+          // connectionArn:
+          //   'arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a',
           variablesNamespace: 'GitHubSourceVariables',
           branch: 'main',
           codeBuildCloneOutput: true,
