@@ -131,7 +131,7 @@ export class Pipeline extends cdk.Stack {
       testTrafficListener: {
         listenerArn: blueGreenOptions.testTrafficListener.listenerArn,
       },
-      terminationWaitTimeInMinutes: 20,
+      terminationWaitTimeInMinutes: 0,
       // deploymentConfig: codedeploy.,
     });
 
