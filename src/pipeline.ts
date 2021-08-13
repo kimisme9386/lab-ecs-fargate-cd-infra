@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as codebuild from '@aws-cdk/aws-codebuild';
-import * as codedeploy from '@aws-cdk/aws-codedeploy';
 import * as codePipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as ecr from '@aws-cdk/aws-ecr';
@@ -133,7 +132,7 @@ export class Pipeline extends cdk.Stack {
         listenerArn: blueGreenOptions.testTrafficListener.listenerArn,
       },
       terminationWaitTimeInMinutes: 20,
-      deploymentConfig: codedeploy.EcsDeploymentConfig.ALL_AT_ONCE,
+      // deploymentConfig: codedeploy.,
     });
 
     pipeline.addStage({
