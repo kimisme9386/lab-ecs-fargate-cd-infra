@@ -14,20 +14,9 @@ Resources:
         #       Subnets: ["subnet-name-1", "subnet-name-2"]
         #       SecurityGroups: ["security-group"]
         #       AssignPublicIp: "ENABLED"
-# Hooks:
-#   - BeforeInstall: "BeforeInstallHookFunctionName"
-#     timeout: 300
-#   - AfterInstall: "AfterInstallHookFunctionName"
-#     timeout: 300
-#   - AfterAllowTestTraffic: "AfterAllowTestTrafficHookFunctionName"
-#     timeout: 300
-#   - BeforeAllowTraffic: "BeforeAllowTrafficHookFunctionName"
-#     timeout: 300
-#   - AfterAllowTraffic: "AfterAllowTrafficHookFunctionName"
-#     timeout: 300
 Hooks:
-  - BeforeInstall: "BlueGreenDeploymentHook"
-  - AfterInstall: "BlueGreenDeploymentHook"
-  - AfterAllowTestTraffic: "BlueGreenDeploymentHook"
+  # - BeforeInstall: "BlueGreenDeploymentHook"
+  # - AfterInstall: "BlueGreenDeploymentHook"
+  # - AfterAllowTestTraffic: "BlueGreenDeploymentHook"
   - BeforeAllowTraffic: "BlueGreenDeploymentHook"
-  - AfterAllowTraffic: "BlueGreenDeploymentHook"
+  # - AfterAllowTraffic: "BlueGreenDeploymentHook"
