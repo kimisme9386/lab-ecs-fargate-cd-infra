@@ -8,6 +8,7 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as iam from '@aws-cdk/aws-iam';
 import { IRole } from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
+import * as ssm from '@aws-cdk/aws-ssm';
 import * as cdk from '@aws-cdk/core';
 import { EcsDeploymentGroup } from '@cloudcomponents/cdk-blue-green-container-deployment';
 import { CodePipelineStatus } from 'cdk-pipeline-status';
@@ -387,6 +388,15 @@ export class Pipeline extends cdk.Stack {
         environment: {
           REGION: cdk.Aws.REGION,
           DEBUG: 'true',
+          POSTMAN_API_KEY: ssm.StringParameter.valueForSecureStringParameter(
+            this,
+            'postman-api-key',
+            1
+          ),
+          POSTMAN_COLLECTION_UID: ssm.StringParameter.valueForStringParameter(
+            this,
+            'postman-collection-uid'
+          ),
         },
       }
     );

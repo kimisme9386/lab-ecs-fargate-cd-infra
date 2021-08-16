@@ -1,0 +1,10 @@
+{
+  "name": "deployment-hooks",
+  "dependencies": {
+    "aws-sdk": "^2.968.0"
+  },
+  "scripts": {
+    "build": "node_modules/typescript/bin/tsc",
+    "watch": "node_modules/typescript/bin/tsc -w --preserveWatchOutput"
+  }
+}
