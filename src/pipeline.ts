@@ -383,7 +383,7 @@ export class Pipeline extends cdk.Stack {
       {
         functionName: 'BlueGreenDeploymentHook',
         code: lambda.DockerImageCode.fromImageAsset(
-          path.join(__dirname, '../deployment-hooks')
+          path.join(__dirname, '../deployment-hooks-node')
         ),
         environment: {
           REGION: cdk.Aws.REGION,
