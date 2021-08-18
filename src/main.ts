@@ -66,7 +66,7 @@ interface DeploymentConfig {
   type: string;
   e2eTest: {
     ssm_postman_api_key: string;
-    ssm_secret_postman_collection_uid: string;
+    ssm_postman_collection_uid: string;
   };
 }
 

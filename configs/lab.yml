@@ -35,4 +35,4 @@ Deployment:
   type: BlueGreen # RollingUpdate or BlueGreen
   e2eTest: # Only support on BlueGreen deployment
     ssm_postman_api_key: "/postman/api-key"
-    ssm_secret_postman_collection_uid: "/postman/collection-uid"
+    ssm_postman_collection_uid: "/postman/collection-uid"
