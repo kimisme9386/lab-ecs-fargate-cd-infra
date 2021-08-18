@@ -25,14 +25,20 @@ exports.handler = async function (event, context, callback) {
   const postmanCommand = `newman run https://api.getpostman.com/collections/${postmanCollectionUid}?apikey=${postmanApiKey}`;
   console.log(`newman command: ${postmanCommand}`);
 
-  const { stdout, stderr } = await exec(postmanCommand);
+  try {
+    const { stdout, stderr } = await exec(postmanCommand);
 
-  if (stderr) {
+    if (stderr) {
+      params.status = 'Failed';
+      console.log(`newman test error result: ${stderr}`);
+    } else {
+      params.status = 'Succeeded';
+      console.log(`newman test result: ${stdout}`);
+    }
+  } catch (error) {
     params.status = 'Failed';
-    console.log(`newman test result: ${stderr}`);
-  } else {
-    params.status = 'Succeeded';
-    console.log(`newman test result: ${stdout}`);
+    console.log(`errorMessage: ${error.errorMessage}`);
+    console.log(`newman test error result: ${error.stdout}`);
   }
 
   console.log(`params: ${JSON.stringify(params)}`);
