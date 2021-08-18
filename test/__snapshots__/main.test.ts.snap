@@ -100,6 +100,20 @@ Object {
             "IpProtocol": "tcp",
             "ToPort": 443,
           },
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 8080",
+            "FromPort": 8080,
+            "IpProtocol": "tcp",
+            "ToPort": 8080,
+          },
+          Object {
+            "CidrIpv6": "::/0",
+            "Description": "Allow from anyone on port 8080",
+            "FromPort": 8080,
+            "IpProtocol": "tcp",
+            "ToPort": 8080,
+          },
         ],
         "VpcId": Object {
           "Ref": "Vpc8378EB38",
@@ -471,6 +485,28 @@ Object {
 exports[`Snapshot 2`] = `
 Object {
   "Outputs": Object {
+    "ExportsOutputFnGetAttAlbProdListenerECSForProdGroup5E485C4FTargetGroupNameCFBF8E85": Object {
+      "Export": Object {
+        "Name": "testStack2:ExportsOutputFnGetAttAlbProdListenerECSForProdGroup5E485C4FTargetGroupNameCFBF8E85",
+      },
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "AlbProdListenerECSForProdGroup5E485C4F",
+          "TargetGroupName",
+        ],
+      },
+    },
+    "ExportsOutputFnGetAttAlbTestListenerECSForTestGroup2153A5BBTargetGroupNameFD8E6730": Object {
+      "Export": Object {
+        "Name": "testStack2:ExportsOutputFnGetAttAlbTestListenerECSForTestGroup2153A5BBTargetGroupNameFD8E6730",
+      },
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "AlbTestListenerECSForTestGroup2153A5BB",
+          "TargetGroupName",
+        ],
+      },
+    },
     "ExportsOutputFnGetAttRepository22E53BBDArn3AD4E30B": Object {
       "Export": Object {
         "Name": "testStack2:ExportsOutputFnGetAttRepository22E53BBDArn3AD4E30B",
@@ -493,6 +529,22 @@ Object {
         ],
       },
     },
+    "ExportsOutputRefAlbProdListenerE48B492A4748D883": Object {
+      "Export": Object {
+        "Name": "testStack2:ExportsOutputRefAlbProdListenerE48B492A4748D883",
+      },
+      "Value": Object {
+        "Ref": "AlbProdListenerE48B492A",
+      },
+    },
+    "ExportsOutputRefAlbTestListenerC9AC975478977ED7": Object {
+      "Export": Object {
+        "Name": "testStack2:ExportsOutputRefAlbTestListenerC9AC975478977ED7",
+      },
+      "Value": Object {
+        "Ref": "AlbTestListenerC9AC9754",
+      },
+    },
     "ExportsOutputRefClusterEB0386A796A0E3FE": Object {
       "Export": Object {
         "Name": "testStack2:ExportsOutputRefClusterEB0386A796A0E3FE",
@@ -511,17 +563,17 @@ Object {
     },
   },
   "Resources": Object {
-    "AlbListenerDFCDF14C": Object {
+    "AlbProdListenerE48B492A": Object {
       "Properties": Object {
         "Certificates": Array [
           Object {
-            "CertificateArn": "arn:aws:acm:ap-northeast-1:048132608410:certificate/bb183acc-7a83-4ff4-8c11-4c8df960b0e2",
+            "CertificateArn": "arn:aws:acm:ap-northeast-1:482631629698:certificate/6ba7f53f-b622-4627-b880-955c382245de",
           },
         ],
         "DefaultActions": Array [
           Object {
             "TargetGroupArn": Object {
-              "Ref": "AlbListenerECSGroup21012B54",
+              "Ref": "AlbProdListenerECSForProdGroup5E485C4F",
             },
             "Type": "forward",
           },
@@ -535,7 +587,7 @@ Object {
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
-    "AlbListenerECSGroup21012B54": Object {
+    "AlbProdListenerECSForProdGroup5E485C4F": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
         "HealthCheckIntervalSeconds": 30,
@@ -561,7 +613,7 @@ Object {
       },
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
     },
-    "AlbListenerRuleE27FB4D8": Object {
+    "AlbProdListenerRule219466EA": Object {
       "Properties": Object {
         "Actions": Array [
           Object {
@@ -584,7 +636,80 @@ Object {
           },
         ],
         "ListenerArn": Object {
-          "Ref": "AlbListenerDFCDF14C",
+          "Ref": "AlbProdListenerE48B492A",
+        },
+        "Priority": 10,
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+    },
+    "AlbTestListenerC9AC9754": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "AlbTestListenerECSForTestGroup2153A5BB",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "testStack1:ExportsOutputRefAlb16C2F1822A94C303",
+        },
+        "Port": 8080,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "AlbTestListenerECSForTestGroup2153A5BB": Object {
+      "Properties": Object {
+        "HealthCheckEnabled": true,
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckPath": "/hello",
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 5,
+        "Matcher": Object {
+          "HttpCode": "200",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "60",
+          },
+        ],
+        "TargetType": "ip",
+        "UnhealthyThresholdCount": 2,
+        "VpcId": Object {
+          "Fn::ImportValue": "testStack1:ExportsOutputRefVpc8378EB38272D6E3A",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "AlbTestListenerRule5FCB082B": Object {
+      "Properties": Object {
+        "Actions": Array [
+          Object {
+            "FixedResponseConfig": Object {
+              "ContentType": "application/json",
+              "MessageBody": "",
+              "StatusCode": "200",
+            },
+            "Type": "fixed-response",
+          },
+        ],
+        "Conditions": Array [
+          Object {
+            "Field": "path-pattern",
+            "PathPatternConfig": Object {
+              "Values": Array [
+                "/status",
+              ],
+            },
+          },
+        ],
+        "ListenerArn": Object {
+          "Ref": "AlbTestListenerC9AC9754",
         },
         "Priority": 10,
       },
@@ -608,24 +733,20 @@ Object {
     },
     "ServiceD69D759B": Object {
       "DependsOn": Array [
-        "AlbListenerECSGroup21012B54",
-        "AlbListenerDFCDF14C",
+        "AlbProdListenerECSForProdGroup5E485C4F",
+        "AlbProdListenerE48B492A",
+        "AlbTestListenerECSForTestGroup2153A5BB",
+        "AlbTestListenerC9AC9754",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "ClusterEB0386A7",
         },
         "DeploymentConfiguration": Object {
-          "DeploymentCircuitBreaker": Object {
-            "Enable": true,
-            "Rollback": false,
-          },
           "MaximumPercent": 200,
           "MinimumHealthyPercent": 100,
         },
-        "DeploymentController": Object {
-          "Type": "ECS",
-        },
+        "DeploymentController": "CODE_DEPLOY",
         "DesiredCount": 0,
         "EnableECSManagedTags": false,
         "HealthCheckGracePeriodSeconds": 0,
@@ -635,7 +756,14 @@ Object {
             "ContainerName": "RestApiContainer",
             "ContainerPort": 80,
             "TargetGroupArn": Object {
-              "Ref": "AlbListenerECSGroup21012B54",
+              "Ref": "AlbProdListenerECSForProdGroup5E485C4F",
+            },
+          },
+          Object {
+            "ContainerName": "RestApiContainer",
+            "ContainerPort": 80,
+            "TargetGroupArn": Object {
+              "Ref": "AlbTestListenerECSForTestGroup2153A5BB",
             },
           },
         ],
@@ -807,7 +935,7 @@ Object {
             "Arn",
           ],
         },
-        "Family": "testStack2TaskDefE1A7FF4E",
+        "Family": "rest-api",
         "Memory": "512",
         "NetworkMode": "awsvpc",
         "RequiresCompatibilities": Array [
@@ -910,7 +1038,204 @@ Object {
 
 exports[`Snapshot 3`] = `
 Object {
+  "Outputs": Object {
+    "BadgeUrl": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
+            },
+            ".s3-ap-northeast-1.amazonaws.com/latest-build.svg#1",
+          ],
+        ],
+      },
+    },
+    "CodePipelineLink": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".console.aws.amazon.com/codesuite/codepipeline/pipelines/",
+            Object {
+              "Ref": "PipelineC660917D",
+            },
+            "/view",
+          ],
+        ],
+      },
+    },
+    "CodePipelineStatusbadgeMarkdownLink09FB99F3": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "[![Build Status](https://",
+            Object {
+              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
+            },
+            ".s3-ap-northeast-1.amazonaws.com/latest-build.svg#1)](https://",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".console.aws.amazon.com/codesuite/codepipeline/pipelines/",
+            Object {
+              "Ref": "PipelineC660917D",
+            },
+            "/view)",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383ArtifactHash16D0C2D1": Object {
+      "Description": "Artifact hash for asset \\"938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383\\"",
+      "Type": "String",
+    },
+    "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383S3Bucket08B6F5ED": Object {
+      "Description": "S3 bucket for asset \\"938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383\\"",
+      "Type": "String",
+    },
+    "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383S3VersionKey1BAFCD59": Object {
+      "Description": "S3 key for asset version \\"938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383\\"",
+      "Type": "String",
+    },
+    "SsmParameterValuepostmanapikeyC96584B6F00A464EAD1953AFF4B05118Parameter": Object {
+      "Default": "/postman/api-key",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValuepostmancollectionuidC96584B6F00A464EAD1953AFF4B05118Parameter": Object {
+      "Default": "/postman/collection-uid",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
   "Resources": Object {
+    "BlueGreenDeploymentHook579796FE": Object {
+      "DependsOn": Array [
+        "BlueGreenDeploymentHookServiceRoleDefaultPolicyB9C41375",
+        "BlueGreenDeploymentHookServiceRoleA153BFC6",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "ImageUri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                Object {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/aws-cdk/assets:b212391235c47509ae7f02c5ff488bd533c74a692b55dcedfcae013980652d81",
+              ],
+            ],
+          },
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "DEBUG": "true",
+            "POSTMAN_API_KEY": Object {
+              "Ref": "SsmParameterValuepostmanapikeyC96584B6F00A464EAD1953AFF4B05118Parameter",
+            },
+            "POSTMAN_COLLECTION_UID": Object {
+              "Ref": "SsmParameterValuepostmancollectionuidC96584B6F00A464EAD1953AFF4B05118Parameter",
+            },
+            "REGION": Object {
+              "Ref": "AWS::Region",
+            },
+          },
+        },
+        "FunctionName": "BlueGreenDeploymentHook",
+        "PackageType": "Image",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "BlueGreenDeploymentHookServiceRoleA153BFC6",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "BlueGreenDeploymentHookServiceRoleA153BFC6": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "BlueGreenDeploymentHookServiceRoleDefaultPolicyB9C41375": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "codedeploy:PutLifecycleEventHookExecutionStatus",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:aws:codedeploy:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":deploymentgroup:ecs-blue-green-application/ecs-blue-green-deployment-group",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "BlueGreenDeploymentHookServiceRoleDefaultPolicyB9C41375",
+        "Roles": Array [
+          Object {
+            "Ref": "BlueGreenDeploymentHookServiceRoleA153BFC6",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "CodeBuildWithinCodePipeline0585DD46": Object {
       "Properties": Object {
         "Artifacts": Object {
@@ -1020,12 +1345,27 @@ Object {
         \\"echo Pushing the Docker images...\\",
         \\"docker push $REPOSITORY_URI:latest\\",
         \\"docker push $REPOSITORY_URI:$IMAGE_TAG\\",
-        \\"printf '[{\\\\\\"name\\\\\\":\\\\\\"%s\\\\\\",\\\\\\"imageUri\\\\\\":\\\\\\"%s\\\\\\"}]' $ECS_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\\"
+        \\"printf '{\\\\\\"ImageURI\\\\\\":\\\\\\"%s\\\\\\"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json\\"
       ]
     }
   },
   \\"artifacts\\": {
-    \\"files\\": \\"imagedefinitions.json\\"
+    \\"files\\": [
+      \\"*\\"
+    ],
+    \\"secondary-artifacts\\": {
+      \\"imageDetail\\": {
+        \\"files\\": [
+          \\"imageDetail.json\\"
+        ]
+      },
+      \\"manifest\\": {
+        \\"files\\": [
+          \\"taskdef.json\\",
+          \\"appspec.yaml\\"
+        ]
+      }
+    }
   }
 }",
           "Type": "CODEPIPELINE",
@@ -1209,7 +1549,7 @@ Object {
             Object {
               "Action": "codestar-connections:UseConnection",
               "Effect": "Allow",
-              "Resource": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
+              "Resource": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
             },
           ],
           "Version": "2012-10-17",
@@ -1222,6 +1562,499 @@ Object {
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "CodePipelineStatusBadgeBucketEC4C6A0A": Object {
+      "DeletionPolicy": "Retain",
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodePipelineStatusBadgeBucketPolicy5CAFDBCD": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": "*",
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "CodePipelineStatusBadgeBucketEC4C6A0A",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "CodePipelineStatusCodePipelineCodePipelineChangeAllowEventRuleApiPipelineCodePipelineStatusCodepipelineEventLambda266122B66D34D5E7": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "CodePipelineStatusCodepipelineEventLambda81D12435",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "CodePipelineStatusCodePipelineCodePipelineChangeE4090DB6",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "CodePipelineStatusCodePipelineCodePipelineChangeE4090DB6": Object {
+      "Properties": Object {
+        "EventPattern": Object {
+          "detail-type": Array [
+            "CodePipeline Pipeline Execution State Change",
+          ],
+          "resources": Array [
+            Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "arn:",
+                  Object {
+                    "Ref": "AWS::Partition",
+                  },
+                  ":codepipeline:",
+                  Object {
+                    "Ref": "AWS::Region",
+                  },
+                  ":",
+                  Object {
+                    "Ref": "AWS::AccountId",
+                  },
+                  ":",
+                  Object {
+                    "Ref": "PipelineC660917D",
+                  },
+                ],
+              ],
+            },
+          ],
+          "source": Array [
+            "aws.codepipeline",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "CodePipelineStatusCodepipelineEventLambda81D12435",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodePipelineStatusCodepipelineEventLambda81D12435": Object {
+      "DependsOn": Array [
+        "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470",
+        "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "ImageUri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                Object {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/aws-cdk/assets:2799ca43f7ef1607a6fbd514461315ce39509a1a014e4b6da2e748c2bc78a0fc",
+              ],
+            ],
+          },
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "BADGE_BUCKET_IMAGE_KEY_NAME": "latest-build.svg",
+            "BADGE_BUCKET_NAME": Object {
+              "Ref": "CodePipelineStatusBadgeBucketEC4C6A0A",
+            },
+            "CODE_PIPELINE_NAME": Object {
+              "Ref": "PipelineC660917D",
+            },
+            "GITHUB_PERSONAL_TOKEN": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:482631629698:secret:codepipeline/lambda/github-token-YWWmII:SecretString:codepipeline/lambda/github-token::}}",
+            "SLACK_WEBHOOK_URL": "",
+            "STAGE": "",
+          },
+        },
+        "ImageConfig": Object {
+          "Command": Array [
+            "codepipelineEventLambda.handler",
+          ],
+        },
+        "PackageType": "Image",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
+            "Arn",
+          ],
+        },
+        "Tags": Array [
+          Object {
+            "Key": "CDK-CfnStackId",
+            "Value": Object {
+              "Ref": "AWS::StackId",
+            },
+          },
+          Object {
+            "Key": "CDK-CfnStackName",
+            "Value": Object {
+              "Ref": "AWS::StackName",
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
+              ],
+            ],
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "CDK-CfnStackId",
+            "Value": Object {
+              "Ref": "AWS::StackId",
+            },
+          },
+          Object {
+            "Key": "CDK-CfnStackName",
+            "Value": Object {
+              "Ref": "AWS::StackName",
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "CodePipelineStatusBadgeBucketEC4C6A0A",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "CodePipelineStatusBadgeBucketEC4C6A0A",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodePipelineStatusCodepipelineEventLambdaServiceRoleDefaultPolicy6AE1D470",
+        "Roles": Array [
+          Object {
+            "Ref": "CodePipelineStatusCodepipelineEventLambdaServiceRole6CB7440B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CustomEcsDeploymentGroupCustomResourceProviderHandlerBCC3B1D2": Object {
+      "DependsOn": Array [
+        "CustomEcsDeploymentGroupCustomResourceProviderRole75DF756F",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383S3Bucket08B6F5ED",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383S3VersionKey1BAFCD59",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters938d80edcfaedf487e50a139ec8e1c729c35c3b52445df7a14b3f7d00d4d4383S3VersionKey1BAFCD59",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "__entrypoint__.handler",
+        "MemorySize": 128,
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CustomEcsDeploymentGroupCustomResourceProviderRole75DF756F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomEcsDeploymentGroupCustomResourceProviderRole75DF756F": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Sub": "arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          },
+        ],
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "codeDeploy:CreateDeploymentGroup",
+                    "codeDeploy:UpdateDeploymentGroup",
+                    "codeDeploy:DeleteDeploymentGroup",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*",
+                },
+                Object {
+                  "Action": Array [
+                    "iam:PassRole",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::GetAtt": Array [
+                      "DeploymentGroupEcsCodeDeployRoleEF05865B",
+                      "Arn",
+                    ],
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "Inline",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "DeploymentGroupCustomResource74B7CDB6": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "ApplicationName": Object {
+          "Ref": "DeploymentGroupEcsApplication4B364F52",
+        },
+        "DeploymentGroupName": "ecs-blue-green-deployment-group",
+        "EcsServices": Array [
+          Object {
+            "ClusterName": Object {
+              "Fn::ImportValue": "testStack2:ExportsOutputRefClusterEB0386A796A0E3FE",
+            },
+            "ServiceName": Object {
+              "Fn::ImportValue": "testStack2:ExportsOutputFnGetAttServiceD69D759BName51127533",
+            },
+          },
+        ],
+        "ProdTrafficListenerArn": Object {
+          "Fn::ImportValue": "testStack2:ExportsOutputRefAlbProdListenerE48B492A4748D883",
+        },
+        "ServiceRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "DeploymentGroupEcsCodeDeployRoleEF05865B",
+            "Arn",
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomEcsDeploymentGroupCustomResourceProviderHandlerBCC3B1D2",
+            "Arn",
+          ],
+        },
+        "TargetGroupNames": Array [
+          Object {
+            "Fn::ImportValue": "testStack2:ExportsOutputFnGetAttAlbProdListenerECSForProdGroup5E485C4FTargetGroupNameCFBF8E85",
+          },
+          Object {
+            "Fn::ImportValue": "testStack2:ExportsOutputFnGetAttAlbTestListenerECSForTestGroup2153A5BBTargetGroupNameFD8E6730",
+          },
+        ],
+        "TerminationWaitTimeInMinutes": 0,
+        "TestTrafficListenerArn": Object {
+          "Fn::ImportValue": "testStack2:ExportsOutputRefAlbTestListenerC9AC975478977ED7",
+        },
+      },
+      "Type": "Custom::EcsDeploymentGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DeploymentGroupEcsApplication4B364F52": Object {
+      "Properties": Object {
+        "ApplicationName": "ecs-blue-green-application",
+        "ComputePlatform": "ECS",
+      },
+      "Type": "AWS::CodeDeploy::Application",
+    },
+    "DeploymentGroupEcsCodeDeployRoleEF05865B": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "codedeploy.",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ".",
+                      Object {
+                        "Ref": "AWS::URLSuffix",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AWSCodeDeployRoleForECS",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
     },
     "PipelineArtifactsBucket22248F97": Object {
       "DeletionPolicy": "Retain",
@@ -1337,7 +2170,7 @@ Object {
                 },
                 "Configuration": Object {
                   "BranchName": "main",
-                  "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
+                  "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
                   "FullRepositoryId": "kimisme9386/lab-ecs-fargate-cd-infra",
                   "OutputArtifactFormat": "CODEBUILD_CLONE_REF",
                 },
@@ -1381,7 +2214,10 @@ Object {
                 "Name": "AWS_CodeBuild",
                 "OutputArtifacts": Array [
                   Object {
-                    "Name": "Artifact_Build_AWS_CodeBuild",
+                    "Name": "imageDetail",
+                  },
+                  Object {
+                    "Name": "manifest",
                   },
                 ],
                 "RoleArn": Object {
@@ -1401,40 +2237,48 @@ Object {
                 "ActionTypeId": Object {
                   "Category": "Deploy",
                   "Owner": "AWS",
-                  "Provider": "ECS",
+                  "Provider": "CodeDeployToECS",
                   "Version": "1",
                 },
                 "Configuration": Object {
-                  "ClusterName": Object {
-                    "Fn::ImportValue": "testStack2:ExportsOutputRefClusterEB0386A796A0E3FE",
+                  "AppSpecTemplateArtifact": "manifest",
+                  "AppSpecTemplatePath": "appspec.yaml",
+                  "ApplicationName": Object {
+                    "Ref": "DeploymentGroupEcsApplication4B364F52",
                   },
-                  "FileName": "imagedefinitions.json",
-                  "ServiceName": Object {
-                    "Fn::ImportValue": "testStack2:ExportsOutputFnGetAttServiceD69D759BName51127533",
+                  "DeploymentGroupName": Object {
+                    "Ref": "DeploymentGroupCustomResource74B7CDB6",
                   },
+                  "Image1ArtifactName": "imageDetail",
+                  "Image1ContainerName": "IMAGE1_NAME",
+                  "TaskDefinitionTemplateArtifact": "manifest",
+                  "TaskDefinitionTemplatePath": "taskdef.json",
                 },
                 "InputArtifacts": Array [
                   Object {
-                    "Name": "Artifact_Build_AWS_CodeBuild",
+                    "Name": "manifest",
+                  },
+                  Object {
+                    "Name": "imageDetail",
                   },
                 ],
-                "Name": "EcsCodeDeployRollingUpdate",
+                "Name": "EcsCodeDeployBlueGreen",
                 "RoleArn": Object {
                   "Fn::GetAtt": Array [
-                    "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRole24E569E2",
+                    "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRole76AB75B5",
                     "Arn",
                   ],
                 },
                 "RunOrder": 1,
               },
             ],
-            "Name": "Deployment",
+            "Name": "DeploymentByCodeDeploy",
           },
         ],
       },
       "Type": "AWS::CodePipeline::Pipeline",
     },
-    "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRole24E569E2": Object {
+    "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRole76AB75B5": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
           "Statement": Array [
@@ -1466,19 +2310,101 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRoleDefaultPolicy9F87A877": Object {
+    "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRoleDefaultPolicy4C2581B2": Object {
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
             Object {
               "Action": Array [
-                "ecs:DescribeServices",
-                "ecs:DescribeTaskDefinition",
-                "ecs:DescribeTasks",
-                "ecs:ListTasks",
-                "ecs:RegisterTaskDefinition",
-                "ecs:UpdateService",
+                "codedeploy:GetApplication",
+                "codedeploy:GetApplicationRevision",
+                "codedeploy:RegisterApplicationRevision",
               ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codedeploy:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":application:",
+                    Object {
+                      "Ref": "DeploymentGroupEcsApplication4B364F52",
+                    },
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "codedeploy:CreateDeployment",
+                "codedeploy:GetDeployment",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codedeploy:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":deploymentgroup:",
+                    Object {
+                      "Ref": "DeploymentGroupEcsApplication4B364F52",
+                    },
+                    "/",
+                    Object {
+                      "Ref": "DeploymentGroupCustomResource74B7CDB6",
+                    },
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "codedeploy:GetDeploymentConfig",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codedeploy:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":deploymentconfig:CodeDeployDefault.ECSAllAtOnce",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecs:RegisterTaskDefinition",
               "Effect": "Allow",
               "Resource": "*",
             },
@@ -1487,7 +2413,6 @@ Object {
               "Condition": Object {
                 "StringEqualsIfExists": Object {
                   "iam:PassedToService": Array [
-                    "ec2.amazonaws.com",
                     "ecs-tasks.amazonaws.com",
                   ],
                 },
@@ -1528,10 +2453,10 @@ Object {
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRoleDefaultPolicy9F87A877",
+        "PolicyName": "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRoleDefaultPolicy4C2581B2",
         "Roles": Array [
           Object {
-            "Ref": "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRole24E569E2",
+            "Ref": "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRole76AB75B5",
           },
         ],
       },
@@ -1616,7 +2541,7 @@ Object {
               "Effect": "Allow",
               "Resource": Object {
                 "Fn::GetAtt": Array [
-                  "PipelineDeploymentEcsCodeDeployRollingUpdateCodePipelineActionRole24E569E2",
+                  "PipelineDeploymentByCodeDeployEcsCodeDeployBlueGreenCodePipelineActionRole76AB75B5",
                   "Arn",
                 ],
               },
@@ -1672,7 +2597,7 @@ Object {
             Object {
               "Action": "codestar-connections:UseConnection",
               "Effect": "Allow",
-              "Resource": "arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a",
+              "Resource": "arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6",
             },
             Object {
               "Action": Array [

@@ -3,7 +3,7 @@ import '@aws-cdk/assert/jest';
 import { App } from '@aws-cdk/core';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import { Pipeline } from '../src//pipeline';
+import { DeploymentType, Pipeline } from '../src//pipeline';
 import { EcsFargate } from '../src/ecs-fargate';
 import { StageConfig } from '../src/main';
 import {} from '../src/pipeline';
@@ -34,11 +34,26 @@ test('Snapshot', () => {
     stageConfig,
   });
 
+  let blueGreenOptions = {};
+
+  if (stageConfig.Deployment.type == DeploymentType.BlueGreen) {
+    blueGreenOptions = {
+      blueGreenOptions: {
+        prodTrafficListener: stackFargate.prodTrafficListener,
+        prodTargetGroup: stackFargate.prodTargetGroup,
+        testTrafficListener: stackFargate.testTrafficListener,
+        testTargetGroup: stackFargate.testTargetGroup,
+        taskDefinition: stackFargate.taskDefinition,
+      },
+    };
+  }
+
   const pipeline = new Pipeline(app, 'ApiPipeline', {
     fargateService: stackFargate.service,
     ecrRepository: stackFargate.ecrRepository,
     env,
     stageConfig,
+    ...blueGreenOptions,
   });
 
   expect(SynthUtils.toCloudFormation(stackNetwork)).toMatchSnapshot();
