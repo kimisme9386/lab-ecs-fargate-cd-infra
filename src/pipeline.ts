@@ -385,7 +385,7 @@ export class Pipeline extends cdk.Stack {
         code: lambda.DockerImageCode.fromImageAsset(
           path.join(__dirname, '../deployment-hooks-node')
         ),
-        timeout: cdk.Duration.seconds(20),
+        timeout: cdk.Duration.seconds(100),
         environment: {
           REGION: cdk.Aws.REGION,
           DEBUG: 'true',

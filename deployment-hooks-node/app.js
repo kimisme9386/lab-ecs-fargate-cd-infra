@@ -23,25 +23,34 @@ exports.handler = async function (event, context, callback) {
   };
 
   const postmanCommand = `newman run https://api.getpostman.com/collections/${postmanCollectionUid}?apikey=${postmanApiKey}`;
+  console.log(`newman command: ${postmanCommand}`);
 
   const { stdout, stderr } = await exec(postmanCommand);
 
   if (stderr) {
     params.status = 'Failed';
-    console.log(err);
+    console.log(`newman test result: ${stderr}`);
   } else {
     params.status = 'Succeeded';
-    console.log(`run newman test: ${stdout}`);
+    console.log(`newman test result: ${stdout}`);
   }
 
+  console.log(`params: ${JSON.stringify(params)}`);
+
   // Pass CodeDeploy the prepared validation test results.
-  codedeploy.putLifecycleEventHookExecutionStatus(params, function (err, data) {
-    if (err) {
-      // Validation failed.
-      callback('Validation test failed');
-    } else {
-      // Validation succeeded.
-      callback(null, 'Validation test succeeded');
-    }
+  const promise = new Promise(function (resolve, reject) {
+    codedeploy.putLifecycleEventHookExecutionStatus(
+      params,
+      function (err, data) {
+        if (err) {
+          reject(Error(err));
+        } else {
+          // Validation succeeded.
+          resolve('Validation test succeeded');
+        }
+      }
+    );
   });
+
+  return promise;
 };
