@@ -388,14 +388,13 @@ export class Pipeline extends cdk.Stack {
         environment: {
           REGION: cdk.Aws.REGION,
           DEBUG: 'true',
-          POSTMAN_API_KEY: ssm.StringParameter.valueForSecureStringParameter(
+          POSTMAN_API_KEY: ssm.StringParameter.valueForStringParameter(
             this,
-            'postman-api-key',
-            1
+            '/postman/api-key'
           ),
           POSTMAN_COLLECTION_UID: ssm.StringParameter.valueForStringParameter(
             this,
-            'postman-collection-uid'
+            '/postman/collection-uid'
           ),
         },
       }
