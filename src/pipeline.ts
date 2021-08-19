@@ -10,7 +10,10 @@ import { IRole } from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as ssm from '@aws-cdk/aws-ssm';
 import * as cdk from '@aws-cdk/core';
-import { EcsDeploymentGroup } from '@cloudcomponents/cdk-blue-green-container-deployment';
+import {
+  EcsDeploymentGroup,
+  RollbackEvent,
+} from '@cloudcomponents/cdk-blue-green-container-deployment';
 import { CodePipelineStatus } from 'cdk-pipeline-status';
 import { StageConfig } from './main';
 
@@ -133,6 +136,7 @@ export class Pipeline extends cdk.Stack {
         listenerArn: blueGreenOptions.testTrafficListener.listenerArn,
       },
       terminationWaitTimeInMinutes: 0,
+      autoRollbackOnEvents: [RollbackEvent.DEPLOYMENT_FAILURE],
       // deploymentConfig: codedeploy.,
     });
 
