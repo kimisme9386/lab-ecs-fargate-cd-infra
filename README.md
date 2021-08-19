@@ -1,12 +1,17 @@
 # lab-ecs-fargate-cd-infra
 
-Build CodePipeline to implement [ECS rolling update](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html) on AWS CDK.
+Build CodePipeline to implement two approach of deployment on AWS CDK.
+
+- [ECS rolling update](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html)
+
+- [ECS Blue/Green deployment with CodeDeploy](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-bluegreen.html)
+  - Leverage [@cloudcomponents/cdk-blue-green-container-deployment](https://github.com/cloudcomponents/cdk-constructs) CDK construct to create CodeDeploy Deployment Group
 
 > Notice: This project is not CDK Construct which is CDK App for lab
 
 ## Introduction
 
-Contains three stacks
+Include three stacks
 
 - ApiNetwork - Vpc, Alb, Subnet and so on...
 
@@ -18,6 +23,15 @@ Web App for ECS
 
 - Using Python [Flask](https://github.com/pallets/flask) Web Framework
 - In [flask.d](flask.d) root directory
+
+Support two approach of deployment
+
+- Two valid value of Deployment.type is `RollingUpdate` or `BlueGreen`
+
+E2E testing when choosing BlueGreen deployment
+
+- Use newman (postman cli) to test on [BeforeAllowTraffic of AppSpec 'hooks' section](https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#appspec-hooks-ecs)
+- Specify postman api-key and collection uid in [configs/lab.yml](configs/lab.yml)
 
 ## Usage
 
