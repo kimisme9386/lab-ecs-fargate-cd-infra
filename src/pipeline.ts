@@ -11,6 +11,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as ssm from '@aws-cdk/aws-ssm';
 import * as cdk from '@aws-cdk/core';
 import {
+  EcsDeploymentConfig,
   EcsDeploymentGroup,
   RollbackEvent,
 } from '@cloudcomponents/cdk-blue-green-container-deployment';
@@ -115,6 +116,21 @@ export class Pipeline extends cdk.Stack {
     imageArtifact: codePipeline.Artifact,
     manifestArtifact: codePipeline.Artifact
   ) {
+    const deploymentConfig = new EcsDeploymentConfig(
+      this,
+      'DeploymentConfig',
+      {
+        deploymentConfigName: 'Canary20Percent5Minute',
+        trafficRoutingConfig: {
+          type: 'TimeBasedCanary',
+          timeBasedCanary: {
+            canaryInterval: 5,
+            canaryPercentage: 20,
+          },
+        },
+      }
+    );
+    
     // codedeploy.EcsDeploymentConfig.fromEcsDeploymentConfigName
     const deploymentGroup = new EcsDeploymentGroup(this, 'DeploymentGroup', {
       applicationName: 'ecs-blue-green-application',
@@ -137,8 +153,10 @@ export class Pipeline extends cdk.Stack {
       },
       terminationWaitTimeInMinutes: 0,
       autoRollbackOnEvents: [RollbackEvent.DEPLOYMENT_FAILURE],
-      // deploymentConfig: codedeploy.,
+      deploymentConfig,
     });
+
+    deploymentGroup.node.addDependency(deploymentConfig);
 
     pipeline.addStage({
       stageName: 'DeploymentByCodeDeploy',
@@ -308,6 +326,7 @@ export class Pipeline extends cdk.Stack {
     ecrRepository: ecr.IRepository,
     ecsContainerName: string
   ) {
+    codebuild.BuildSpec.fromSourceFilename('');
     const codeBuild = new codebuild.PipelineProject(
       this,
       'CodeBuildWithinCodePipeline',
