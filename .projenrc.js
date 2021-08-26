@@ -23,7 +23,7 @@ const project = new AwsCdkTypeScriptApp({
   devDeps: ['@types/js-yaml@^3.12.5'],
   deps: [
     'js-yaml@^3.14.1',
-    '@cloudcomponents/cdk-blue-green-container-deployment@^1.39.0',
+    '@cloudcomponents/cdk-blue-green-container-deployment@^1.40.1',
     'cdk-pipeline-status@^0.1.17',
   ],
   releaseWorkflow: false,

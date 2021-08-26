@@ -155,7 +155,7 @@
     },
     {
       "name": "@cloudcomponents/cdk-blue-green-container-deployment",
-      "version": "^1.39.0",
+      "version": "^1.40.1",
       "type": "runtime"
     },
     {

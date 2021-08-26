@@ -116,21 +116,17 @@ export class Pipeline extends cdk.Stack {
     imageArtifact: codePipeline.Artifact,
     manifestArtifact: codePipeline.Artifact
   ) {
-    const deploymentConfig = new EcsDeploymentConfig(
-      this,
-      'DeploymentConfig',
-      {
-        deploymentConfigName: 'Canary20Percent5Minute',
-        trafficRoutingConfig: {
-          type: 'TimeBasedCanary',
-          timeBasedCanary: {
-            canaryInterval: 5,
-            canaryPercentage: 20,
-          },
+    const deploymentConfig = new EcsDeploymentConfig(this, 'DeploymentConfig', {
+      deploymentConfigName: 'Canary20Percent5Minute',
+      trafficRoutingConfig: {
+        type: 'TimeBasedCanary',
+        timeBasedCanary: {
+          canaryInterval: 5,
+          canaryPercentage: 20,
         },
-      }
-    );
-    
+      },
+    });
+
     // codedeploy.EcsDeploymentConfig.fromEcsDeploymentConfigName
     const deploymentGroup = new EcsDeploymentGroup(this, 'DeploymentGroup', {
       applicationName: 'ecs-blue-green-application',
@@ -155,8 +151,6 @@ export class Pipeline extends cdk.Stack {
       autoRollbackOnEvents: [RollbackEvent.DEPLOYMENT_FAILURE],
       deploymentConfig,
     });
-
-    deploymentGroup.node.addDependency(deploymentConfig);
 
     pipeline.addStage({
       stageName: 'DeploymentByCodeDeploy',
