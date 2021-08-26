@@ -1,4 +1,4 @@
-const { AwsCdkTypeScriptApp } = require('projen');
+const { AwsCdkTypeScriptApp, DependenciesUpgradeMechanism } = require('projen');
 const project = new AwsCdkTypeScriptApp({
   cdkVersion: '1.119.0',
   cdkVersionPinning: true,
@@ -27,6 +27,9 @@ const project = new AwsCdkTypeScriptApp({
     'cdk-pipeline-status@^0.1.17',
   ],
   releaseWorkflow: false,
+  buildWorkflow: false,
+  stale: false,
+  depsUpgrade: DependenciesUpgradeMechanism.NONE,
   context: {
     'availability-zones:account=482631629698:region=ap-northeast-1': [
       'ap-northeast-1a',

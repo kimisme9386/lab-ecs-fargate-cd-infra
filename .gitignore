@@ -38,9 +38,6 @@ yarn-error.log*
 !/.eslintrc.json
 !/.gitattributes
 !/.github/pull_request_template.md
-!/.github/workflows/build.yml
-!/.github/workflows/stale.yml
-!/.github/workflows/upgrade.yml
 !/.mergify.yml
 !/.npmignore
 !/.projen/deps.json
