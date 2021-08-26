@@ -130,7 +130,7 @@ export class Pipeline extends cdk.Stack {
         },
       }
     );
-    
+
     // codedeploy.EcsDeploymentConfig.fromEcsDeploymentConfigName
     const deploymentGroup = new EcsDeploymentGroup(this, 'DeploymentGroup', {
       applicationName: 'ecs-blue-green-application',
