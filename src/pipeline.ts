@@ -61,7 +61,7 @@ export class Pipeline extends cdk.Stack {
         props.stageConfig.Ecs.container.name
       );
 
-      this.createDeploymentHooksLambda();
+      this.createDeploymentHooksLambda(props.stageConfig.Deployment.e2eTest);
     }
 
     if (codebuildProject == undefined) {
@@ -393,7 +393,10 @@ export class Pipeline extends cdk.Stack {
     return codeBuild;
   }
 
-  createDeploymentHooksLambda() {
+  createDeploymentHooksLambda(e2eTest: {
+    ssm_postman_api_key: string;
+    ssm_postman_collection_uid: string;
+  }) {
     const hookLambda = new lambda.DockerImageFunction(
       this,
       'BlueGreenDeploymentHook',
@@ -408,11 +411,11 @@ export class Pipeline extends cdk.Stack {
           DEBUG: 'true',
           POSTMAN_API_KEY: ssm.StringParameter.valueForStringParameter(
             this,
-            '/postman/api-key'
+            e2eTest.ssm_postman_api_key
           ),
           POSTMAN_COLLECTION_UID: ssm.StringParameter.valueForStringParameter(
             this,
-            '/postman/collection-uid'
+            e2eTest.ssm_postman_collection_uid
           ),
         },
       }
