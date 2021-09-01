@@ -1,6 +1,6 @@
 const { AwsCdkTypeScriptApp, DependenciesUpgradeMechanism } = require('projen');
 const project = new AwsCdkTypeScriptApp({
-  cdkVersion: '1.119.0',
+  cdkVersion: '1.120.0',
   cdkVersionPinning: true,
   defaultReleaseBranch: 'main',
   name: 'lab-ecs-fargate-cd-infra',
