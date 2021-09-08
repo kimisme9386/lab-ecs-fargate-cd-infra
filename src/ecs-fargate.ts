@@ -25,10 +25,13 @@ export class EcsFargate extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: EcsFargateProps) {
     super(scope, id, props);
 
-    this.ecrRepository = new ecr.Repository(this, 'Repository');
+    this.ecrRepository = new ecr.Repository(this, 'Repository', {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
 
     const vpc =
-      props?.vpc ?? ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true });
+      props?.vpc ??
+      ec2.Vpc.fromLookup(this, 'DefaultVpc', { isDefault: true });
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: vpc,
     });
@@ -89,7 +92,7 @@ export class EcsFargate extends cdk.Stack {
     }
 
     if (props?.alb) {
-      let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
+      let alb = this.createAlbListenerAndTargetGroup(
         'Prod',
         props.alb,
         this.service,
@@ -98,21 +101,22 @@ export class EcsFargate extends cdk.Stack {
         80
       );
 
-      this.prodTrafficListener = listener;
-      this.prodTargetGroup = targetGroup;
+      this.prodTrafficListener = alb.listener;
+      this.prodTargetGroup = alb.targetGroup;
 
       if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {
-        let { listener, targetGroup } = this.createAlbListenerAndTargetGroup(
-          'Test',
-          props.alb,
-          this.service,
-          props.stageConfig.Network,
-          8080,
-          80
-        );
+        let testAlb =
+          this.createAlbListenerAndTargetGroup(
+            'Test',
+            props.alb,
+            this.service,
+            props.stageConfig.Network,
+            8080,
+            80
+          );
 
-        this.testTrafficListener = listener;
-        this.testTargetGroup = targetGroup;
+        this.testTrafficListener = testAlb.listener;
+        this.testTargetGroup = testAlb.targetGroup;
       }
     }
   }
