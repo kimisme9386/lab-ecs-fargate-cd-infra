@@ -15,7 +15,7 @@ import {
   EcsDeploymentGroup,
   RollbackEvent,
 } from '@cloudcomponents/cdk-blue-green-container-deployment';
-import { CodePipelineStatus } from 'cdk-pipeline-status';
+import { CodePipelineBadgeNotification } from 'cdk-codepipeline-badge-notification';
 import { StageConfig } from './main';
 
 export enum DeploymentType {
@@ -202,7 +202,7 @@ export class Pipeline extends cdk.Stack {
   }
 
   createPipelineStatus(pipeline: codePipeline.Pipeline) {
-    const codePipelineStatus = new CodePipelineStatus(
+    const codePipelineBadgeNotification = new CodePipelineBadgeNotification(
       this,
       'CodePipelineStatus',
       {
@@ -216,11 +216,11 @@ export class Pipeline extends cdk.Stack {
     );
 
     new cdk.CfnOutput(this, 'BadgeUrl', {
-      value: codePipelineStatus.badgeUrl,
+      value: codePipelineBadgeNotification.badgeUrl,
     });
 
     new cdk.CfnOutput(this, 'CodePipelineLink', {
-      value: codePipelineStatus.codePipelineLink,
+      value: codePipelineBadgeNotification.codePipelineLink,
     });
   }
 
