@@ -159,8 +159,8 @@
       "type": "runtime"
     },
     {
-      "name": "cdk-pipeline-status",
-      "version": "^0.1.17",
+      "name": "cdk-codepipeline-badge-notification",
+      "version": "^0.2.11",
       "type": "runtime"
     },
     {

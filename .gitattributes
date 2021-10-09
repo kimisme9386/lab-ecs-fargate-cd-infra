@@ -5,6 +5,7 @@
 /.gitattributes                  	linguist-generated
 /.github/pull_request_template.md	linguist-generated
 /.gitignore                      	linguist-generated
+/.gitpod.yml                     	linguist-generated
 /.mergify.yml                    	linguist-generated
 /.npmignore                      	linguist-generated
 /.projen/**                      	linguist-generated

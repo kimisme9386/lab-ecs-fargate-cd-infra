@@ -181,6 +181,18 @@
           "exec": "cdk diff"
         }
       ]
+    },
+    "gitpod:prebuild": {
+      "name": "gitpod:prebuild",
+      "description": "Prebuild setup for Gitpod",
+      "steps": [
+        {
+          "exec": "yarn install --frozen-lockfile --check-files"
+        },
+        {
+          "exec": "npm i -g aws-cdk@1.120.0"
+        }
+      ]
     }
   },
   "env": {
