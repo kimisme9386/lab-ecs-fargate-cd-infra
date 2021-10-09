@@ -190,7 +190,7 @@
           "exec": "yarn install --frozen-lockfile --check-files"
         },
         {
-          "exec": "npm i -g aws-cdk@1.120.0"
+          "exec": "npm i -g aws-cdk@1.127.0"
         }
       ]
     }

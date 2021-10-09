@@ -6,7 +6,7 @@ const {
 } = require('projen');
 
 const project = new AwsCdkTypeScriptApp({
-  cdkVersion: '1.120.0',
+  cdkVersion: '1.127.0',
   cdkVersionPinning: true,
   defaultReleaseBranch: 'main',
   name: 'lab-ecs-fargate-cd-infra',
