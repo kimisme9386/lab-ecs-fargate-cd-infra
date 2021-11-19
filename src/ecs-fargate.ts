@@ -2,7 +2,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
-import * as logs from '@aws-cdk/aws-logs';
+// import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
 import { NetworkConfig, StageConfig } from './main';
 import { DeploymentType } from './pipeline';
@@ -46,10 +46,12 @@ export class EcsFargate extends cdk.Stack {
       image: ecs.ContainerImage.fromEcrRepository(this.ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
-      logging: ecs.LogDriver.awsLogs({
-        logGroup: new logs.LogGroup(this, 'EcsLogGroup'),
-        streamPrefix: 'ecs',
-      }),
+      // logging: ecs.LogDriver.awsLogs({
+      //   logGroup: new logs.LogGroup(this, 'EcsLog', {
+      //     removalPolicy: cdk.RemovalPolicy.DESTROY,
+      //   }),
+      //   streamPrefix: 'ecs',
+      // }),
     });
 
     let ecsServiceProperty = {};
