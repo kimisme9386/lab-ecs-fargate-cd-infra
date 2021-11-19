@@ -106,7 +106,7 @@ export class Pipeline extends cdk.Stack {
       );
     }
 
-    this.createPipelineStatus(pipeline);
+    // this.createPipelineStatus(pipeline);
   }
 
   addBlueGreenDeploymentStage(
@@ -444,9 +444,7 @@ export class Pipeline extends cdk.Stack {
           repo: 'lab-ecs-fargate-cd-infra',
           output: sourceArtifact,
           connectionArn:
-            'arn:aws:codestar-connections:ap-northeast-1:482631629698:connection/6a6dd11d-2713-4129-9e5d-23289c8968d6',
-          // connectionArn:
-          //   'arn:aws:codestar-connections:ap-northeast-1:048132608410:connection/427eea30-80b6-49b3-8764-fb06d0b8ad7a',
+            'arn:aws:codestar-connections:ap-northeast-1:340227574277:connection/faa6dae9-0e12-4829-88f2-858a42a23641',
           variablesNamespace: 'GitHubSourceVariables',
           branch: 'main',
           codeBuildCloneOutput: true,
