@@ -5,8 +5,7 @@ Network:
     ipv6enabled: true
   alb:
     listener:
-      # certificateArn: "arn:aws:acm:ap-northeast-1:048132608410:certificate/bb183acc-7a83-4ff4-8c11-4c8df960b0e2"   # .wondercise.com
-      certificateArn: "arn:aws:acm:ap-northeast-1:482631629698:certificate/6ba7f53f-b622-4627-b880-955c382245de" # .9incloud.com
+      certificateArn: "arn:aws:acm:ap-northeast-1:340227574277:certificate/2e0c79e2-c141-4896-bbd7-4cef6775b314" # .9incloud.com
     targetHealthCheck: 
       enabled: true
       interval: 30 # unit: seconds
@@ -32,7 +31,7 @@ Ecs:
     assignPublicIp: true  # Value is true and ECS Service Subnet type is public, Value is false and ECS Service Subnet type is private.
 
 Deployment:
-  type: BlueGreen # RollingUpdate or BlueGreen
+  type: RollingUpdate # RollingUpdate or BlueGreen
   e2eTest: # Only support on BlueGreen deployment
     ssm_postman_api_key: "/postman/api-key"
     ssm_postman_collection_uid: "/postman/collection-uid"
