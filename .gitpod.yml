@@ -20,3 +20,4 @@ github:
 vscode:
   extensions:
     - dbaeumer.vscode-eslint
+    - amazonwebservices.aws-toolkit-vscode

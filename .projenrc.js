@@ -101,7 +101,8 @@ gitpod.addCustomTask({
 
 /* spellchecker: disable */
 gitpod.addVscodeExtensions(
-  'dbaeumer.vscode-eslint'
+  'dbaeumer.vscode-eslint',
+  'amazonwebservices.aws-toolkit-vscode',
 );
 
 
