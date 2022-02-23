@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { App, Aws, Construct, Tags } from '@aws-cdk/core';
+import { App } from '@aws-cdk/core';
 import * as yaml from 'js-yaml';
 import { EcsFargate } from './ecs-fargate';
 import { DeploymentType, Pipeline } from './pipeline';
@@ -76,9 +76,9 @@ function readConfig(stageName: string): any {
   );
 }
 
-function tagResource(scope: Construct): void {
-  Tags.of(scope).add('CDK-CfnStackName', Aws.STACK_NAME);
-}
+// function tagResource(scope: Construct): void {
+//   Tags.of(scope).add('CDK-CfnStackName', Aws.STACK_NAME);
+// }
 
 const stage = process.env.STAGE || null;
 
@@ -101,7 +101,7 @@ const restAPINetwork = new RestAPINetwork(app, 'ApiNetwork', {
   env: devEnv,
 });
 
-tagResource(restAPINetwork);
+// tagResource(restAPINetwork);
 
 const ecsFargate = new EcsFargate(app, 'ApiApp', {
   stageConfig,
@@ -110,7 +110,7 @@ const ecsFargate = new EcsFargate(app, 'ApiApp', {
   env: devEnv,
 });
 
-tagResource(ecsFargate);
+// tagResource(ecsFargate);
 
 let blueGreenOptions = {};
 

@@ -160,7 +160,7 @@
     },
     {
       "name": "cdk-codepipeline-badge-notification",
-      "version": "^0.2.11",
+      "version": "cdkv1",
       "type": "runtime"
     },
     {

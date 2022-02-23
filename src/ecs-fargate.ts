@@ -2,7 +2,8 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
-// import * as logs from '@aws-cdk/aws-logs';
+import * as iam from '@aws-cdk/aws-iam';
+import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
 import { NetworkConfig, StageConfig } from './main';
 import { DeploymentType } from './pipeline';
@@ -40,19 +41,60 @@ export class EcsFargate extends cdk.Stack {
       memoryLimitMiB: props.stageConfig.Ecs.memoryLimitMiB,
       cpu: props.stageConfig.Ecs.cpu,
       family: props.stageConfig.Ecs.family,
+
     });
 
     this.taskDefinition.addContainer(props.stageConfig.Ecs.container.name, {
       image: ecs.ContainerImage.fromEcrRepository(this.ecrRepository),
       environment: props.stageConfig.Ecs.container.environment,
       portMappings: [{ containerPort: 80, hostPort: 80 }],
-      // logging: ecs.LogDriver.awsLogs({
-      //   logGroup: new logs.LogGroup(this, 'EcsLog', {
-      //     removalPolicy: cdk.RemovalPolicy.DESTROY,
-      //   }),
-      //   streamPrefix: 'ecs',
-      // }),
+      logging: ecs.LogDriver.awsLogs({
+        logGroup: new logs.LogGroup(this, 'EcsTestExecLog', {
+          logGroupName: '/ecs/test-ecs-exec',
+          removalPolicy: cdk.RemovalPolicy.DESTROY,
+        }),
+        streamPrefix: 'ecs',
+      }),
+      linuxParameters: new ecs.LinuxParameters(this, 'ecsLinuxParameters', {
+        initProcessEnabled: true,
+      }),
     });
+
+    this.taskDefinition.taskRole.addManagedPolicy(
+      new iam.ManagedPolicy(this, 'ecsTaskSSMSession', {
+        document: iam.PolicyDocument.fromJson({
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: [
+                'ssmmessages:CreateControlChannel',
+                'ssmmessages:CreateDataChannel',
+                'ssmmessages:OpenControlChannel',
+                'ssmmessages:OpenDataChannel',
+              ],
+              Resource: '*',
+            },
+            {
+              Effect: 'Allow',
+              Action: [
+                'logs:DescribeLogGroups',
+              ],
+              Resource: '*',
+            },
+            {
+              Effect: 'Allow',
+              Action: [
+                'logs:CreateLogStream',
+                'logs:DescribeLogStreams',
+                'logs:PutLogEvents',
+              ],
+              Resource: '*',
+            },
+          ],
+        }),
+      })
+    );
 
     let ecsServiceProperty = {};
     if (props.stageConfig.Deployment.type == DeploymentType.RollingUpdate) {
@@ -85,6 +127,7 @@ export class EcsFargate extends cdk.Stack {
             : ec2.SubnetType.PRIVATE,
       }),
       ...ecsServiceProperty,
+      enableExecuteCommand: true,
     });
 
     if (props.stageConfig.Deployment.type == DeploymentType.BlueGreen) {

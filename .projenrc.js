@@ -30,7 +30,7 @@ const project = new AwsCdkTypeScriptApp({
   deps: [
     'js-yaml@^3.14.1',
     '@cloudcomponents/cdk-blue-green-container-deployment@^1.40.1',
-    'cdk-codepipeline-badge-notification@^0.2.11',
+    'cdk-codepipeline-badge-notification@cdkv1',
   ],
   releaseWorkflow: false,
   buildWorkflow: false,
@@ -102,7 +102,7 @@ gitpod.addCustomTask({
 /* spellchecker: disable */
 gitpod.addVscodeExtensions(
   'dbaeumer.vscode-eslint',
-  'amazonwebservices.aws-toolkit-vscode',
+  'amazonwebservices.aws-toolkit-vscode'
 );
 
 

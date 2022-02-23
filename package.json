@@ -55,7 +55,7 @@
     "@aws-cdk/aws-ssm": "1.127.0",
     "@aws-cdk/core": "1.127.0",
     "@cloudcomponents/cdk-blue-green-container-deployment": "^1.40.1",
-    "cdk-codepipeline-badge-notification": "^0.2.11",
+    "cdk-codepipeline-badge-notification": "cdkv1",
     "js-yaml": "^3.14.1"
   },
   "bundledDependencies": [],

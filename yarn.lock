@@ -2253,10 +2253,10 @@ cdk-assets@1.127.0:
     mime "^2.5.2"
     yargs "^16.2.0"
 
-cdk-codepipeline-badge-notification@^0.2.11:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/cdk-codepipeline-badge-notification/-/cdk-codepipeline-badge-notification-0.2.11.tgz#3da7ea1123160ef5338c3e86f17490e16ef27a3d"
-  integrity sha512-B8EdksHX/KDw4ey9nfAMXDlgoDPbuUVEBcNW0gE97neNTFi/IAAM4SAjdeNTkBXyHRZArAWRl4bxIAe42CIuJw==
+cdk-codepipeline-badge-notification@cdkv1:
+  version "1.0.53"
+  resolved "https://registry.yarnpkg.com/cdk-codepipeline-badge-notification/-/cdk-codepipeline-badge-notification-1.0.53.tgz#d3b4f6bd191715e3db83314c5ad37a6fd5c3ca44"
+  integrity sha512-ZGn8LDvP5f6mFE76ugOMlXfpGPwAZZEwRHUJ/di7t8YAkpyvGGnu2UOsX2Fm4fVHcsTurWo7Aulaw7A2cBxiwg==
   dependencies:
     "@aws-cdk/aws-codebuild" "^1.100.0"
     "@aws-cdk/aws-codepipeline" "^1.100.0"
