@@ -124,7 +124,7 @@ export class EcsFargate extends cdk.Stack {
         subnetType:
           props.stageConfig.Ecs.service.assignPublicIp == true
             ? ec2.SubnetType.PUBLIC
-            : ec2.SubnetType.PRIVATE,
+            : ec2.SubnetType.PRIVATE_ISOLATED,
       }),
       ...ecsServiceProperty,
       enableExecuteCommand: true,
